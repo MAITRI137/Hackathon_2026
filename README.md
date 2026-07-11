@@ -57,9 +57,6 @@ The problem statement is released at the beginning of the round. As soon as it i
 | 📈 | Meaningful commit history from both team members |
 | 🖼️ | Screenshots or a short demo link when available |
 
-> [!CAUTION]
-> Secrets, local coordination files, temporary exports, build artifacts, and personal configuration are excluded from Git.
-
 <!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
 
 <div align="center">
