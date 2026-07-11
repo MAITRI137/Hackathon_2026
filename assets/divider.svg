@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 40" width="1600" height="40" role="img" aria-label="section divider">
+  <defs>
+    <linearGradient id="dHair" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0"/>
+      <stop offset="25%" stop-color="#A78BFA" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#F472B6" stop-opacity="0.9"/>
+      <stop offset="75%" stop-color="#34D399" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#A3E635" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="dGlow" x="-20%" y="-400%" width="140%" height="900%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+  <rect x="200" y="19" width="1200" height="1.5" fill="url(#dHair)" filter="url(#dGlow)" opacity="0.5"/>
+  <rect x="200" y="19.5" width="1200" height="1" fill="url(#dHair)"/>
+  <rect x="795" y="15" width="9" height="9" transform="rotate(45 799.5 19.5)" fill="#F472B6" opacity="0.75"/>
+</svg>

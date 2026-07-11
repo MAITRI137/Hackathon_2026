@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 180" width="1600" height="180" role="img" aria-label="footer">
+  <defs>
+    <radialGradient id="fVig" cx="50%" cy="120%" r="110%">
+      <stop offset="0%" stop-color="#101018"/>
+      <stop offset="100%" stop-color="#050507"/>
+    </radialGradient>
+    <linearGradient id="fHair" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0"/>
+      <stop offset="25%" stop-color="#A78BFA"/>
+      <stop offset="50%" stop-color="#F472B6"/>
+      <stop offset="75%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#A3E635" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="fSoft" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="70"/>
+    </filter>
+    <filter id="fGrain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <filter id="fEdgeGlow" x="-10%" y="-300%" width="120%" height="700%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <clipPath id="fFrame">
+      <rect width="1600" height="180" rx="20"/>
+    </clipPath>
+    <style>
+      @keyframes fDrift1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(60px,-12px); } }
+      @keyframes fDrift2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-70px,10px); } }
+      @keyframes fDrift3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(40px,14px); } }
+      .fb1 { animation: fDrift1 28s ease-in-out infinite; }
+      .fb2 { animation: fDrift2 34s ease-in-out infinite; }
+      .fb3 { animation: fDrift3 24s ease-in-out infinite; }
+    </style>
+  </defs>
+
+  <g clip-path="url(#fFrame)">
+    <rect width="1600" height="180" fill="url(#fVig)"/>
+    <g filter="url(#fSoft)">
+      <circle class="fb1" cx="320" cy="215" r="170" fill="#A78BFA" opacity="0.55"/>
+      <circle class="fb2" cx="660" cy="240" r="180" fill="#F472B6" opacity="0.45"/>
+      <circle cx="980" cy="235" r="170" fill="#714B67" opacity="0.70"/>
+      <circle class="fb3" cx="1300" cy="215" r="170" fill="#34D399" opacity="0.45"/>
+    </g>
+    <rect width="1600" height="180" filter="url(#fGrain)" opacity="0.045"/>
+    <rect x="0" y="0" width="1600" height="1.5" fill="url(#fHair)" opacity="0.9"/>
+    <rect x="0" y="1.5" width="1600" height="6" fill="url(#fHair)" opacity="0.25" filter="url(#fEdgeGlow)"/>
+  </g>
+</svg>
