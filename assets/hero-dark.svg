@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 380" width="1600" height="380" role="img" aria-labelledby="heroTitleD">
+  <title id="heroTitleD">Hackathon 2026 — Team Maitri · Odoo Hackathon 2026 · Virtual Round. Building the next great solution — one commit at a time.</title>
+  <defs>
+    <linearGradient id="headline" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A78BFA"/>
+      <stop offset="45%" stop-color="#F472B6"/>
+      <stop offset="100%" stop-color="#A3E635"/>
+    </linearGradient>
+    <linearGradient id="hairline" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0"/>
+      <stop offset="25%" stop-color="#A78BFA"/>
+      <stop offset="50%" stop-color="#F472B6"/>
+      <stop offset="75%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#A3E635" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="80"/>
+    </filter>
+    <filter id="headGlow" x="-40%" y="-120%" width="180%" height="340%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
+    <clipPath id="headClip">
+      <text x="800" y="225" text-anchor="middle" font-family="'SF Pro Display','SF Pro Text',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="110" font-weight="800" letter-spacing="-3">Hackathon 2026</text>
+    </clipPath>
+    <style>
+      @keyframes drift1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(46px,14px); } }
+      @keyframes drift2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-40px,-12px); } }
+      .b1 { animation: drift1 28s ease-in-out infinite; }
+      .b2 { animation: drift2 34s ease-in-out infinite; }
+      @keyframes sweep { 0% { transform: translateX(-700px); } 55% { transform: translateX(2300px); } 100% { transform: translateX(2300px); } }
+      .sweep { animation: sweep 7.5s cubic-bezier(0.4,0,0.2,1) infinite; }
+      @keyframes blink { 0% { opacity: 1; } 49.9% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 0; } }
+      .cursor { animation: blink 1.15s linear infinite; }
+    </style>
+  </defs>
+
+  <!-- soft aurora wash behind the headline only -->
+  <g filter="url(#soft)">
+    <ellipse class="b1" cx="580" cy="185" rx="270" ry="95" fill="#A78BFA" opacity="0.20"/>
+    <ellipse class="b2" cx="1030" cy="185" rx="270" ry="95" fill="#F472B6" opacity="0.14"/>
+  </g>
+
+  <!-- eyebrow -->
+  <text x="800" y="96" text-anchor="middle"
+    font-family="'SF Pro Display','SF Pro Text',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif"
+    font-size="18" font-weight="500" letter-spacing="7" fill="#FFFFFF" opacity="0.50">TEAM MAITRI · ODOO HACKATHON 2026 · VIRTUAL ROUND</text>
+
+  <!-- headline glow -->
+  <text x="800" y="225" text-anchor="middle"
+    font-family="'SF Pro Display','SF Pro Text',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif"
+    font-size="110" font-weight="800" letter-spacing="-3" fill="url(#headline)" opacity="0.45" filter="url(#headGlow)">Hackathon 2026</text>
+
+  <!-- headline -->
+  <text x="800" y="225" text-anchor="middle"
+    font-family="'SF Pro Display','SF Pro Text',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif"
+    font-size="110" font-weight="800" letter-spacing="-3" fill="url(#headline)">Hackathon 2026</text>
+
+  <!-- shimmer sweep clipped to headline -->
+  <g clip-path="url(#headClip)">
+    <g class="sweep">
+      <rect x="0" y="100" width="260" height="180" fill="url(#sweepGrad)" transform="skewX(-18)"/>
+    </g>
+  </g>
+
+  <!-- tagline -->
+  <text x="800" y="286" text-anchor="middle"
+    font-family="'SF Mono','Cascadia Code',Consolas,'JetBrains Mono',monospace"
+    font-size="22" fill="#FFFFFF" opacity="0.68">Building the next great solution — one commit at a time.<tspan class="cursor" fill="#A3E635"> ▍</tspan></text>
+
+  <!-- chip row -->
+  <g font-family="'SF Pro Display','SF Pro Text',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="20" font-weight="600">
+    <rect x="439" y="308" width="260" height="56" rx="28" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.18"/>
+    <text x="569" y="343" text-anchor="middle" fill="#C4B5FD" opacity="0.95">Pre-Round Bootstrap</text>
+
+    <rect x="719" y="308" width="264" height="56" rx="28" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.18"/>
+    <text x="851" y="343" text-anchor="middle" fill="#86EFAC" opacity="0.95">Stable Branch · main</text>
+
+    <rect x="1003" y="308" width="158" height="56" rx="28" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.18"/>
+    <text x="1082" y="343" text-anchor="middle" fill="#F9A8D4" opacity="0.95">2 Builders</text>
+  </g>
+
+  <!-- bottom hairline -->
+  <rect x="120" y="376" width="1360" height="1.5" fill="url(#hairline)" opacity="0.7"/>
+</svg>

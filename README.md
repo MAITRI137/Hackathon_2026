@@ -2,7 +2,10 @@
 
 <div align="center">
 
-<img src="assets/hero.svg" width="100%" alt="Hackathon 2026 — Team Maitri · Odoo Hackathon 2026 · Virtual Round. Building the next great solution — one commit at a time. Pre-Round Bootstrap · stable branch: main · 2 builders" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg" />
+  <img src="assets/hero-light.svg" width="100%" alt="Hackathon 2026 — Team Maitri · Odoo Hackathon 2026 · Virtual Round. Building the next great solution — one commit at a time. Pre-Round Bootstrap · Stable Branch: main · 2 Builders" />
+</picture>
 
 </div>
 
@@ -27,7 +30,7 @@ The problem statement is released at the beginning of the round. As soon as it i
 
 <div align="center">
 
-<img src="assets/card-maitri.svg" width="49.4%" alt="Maitri — Team Leader: problem selection, product direction, UX, portal submission, final demo" /><img src="assets/card-vyas.svg" width="49.4%" alt="Vyas Devgna — Team Member: architecture, implementation, integration, validation, testing" />
+<img src="assets/card-maitri.svg" width="49.4%" alt="Maitri — Team Leader: problem selection and product direction, UI and UX, testing and validation, portal submission and final demo" /><img src="assets/card-vyas.svg" width="49.4%" alt="Vyas Devgna — Team Member: system architecture, backend design and implementation, integration" />
 
 </div>
 

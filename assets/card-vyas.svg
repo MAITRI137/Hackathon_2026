@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" width="760" height="420" role="img" aria-labelledby="cvTitle">
-  <title id="cvTitle">Vyas Devgna — Team Member: architecture, implementation, integration, validation, testing</title>
+  <title id="cvTitle">Vyas Devgna — Team Member: system architecture, backend implementation, integration</title>
   <defs>
     <linearGradient id="ringV" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#34D399"/>
@@ -62,14 +62,12 @@
 
     <!-- responsibilities -->
     <g font-family="'SF Pro Display','SF Pro Text',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="18" fill="#FFFFFF" fill-opacity="0.68">
-      <circle cx="66" cy="252" r="3.2" fill="url(#dotV)"/>
-      <text x="86" y="258">Architecture &amp; implementation</text>
-      <circle cx="66" cy="288" r="3.2" fill="url(#dotV)"/>
-      <text x="86" y="294">Integration</text>
-      <circle cx="66" cy="324" r="3.2" fill="url(#dotV)"/>
-      <text x="86" y="330">Validation</text>
-      <circle cx="66" cy="360" r="3.2" fill="url(#dotV)"/>
-      <text x="86" y="366">Testing</text>
+      <circle cx="66" cy="270" r="3.2" fill="url(#dotV)"/>
+      <text x="86" y="276">System architecture</text>
+      <circle cx="66" cy="306" r="3.2" fill="url(#dotV)"/>
+      <text x="86" y="312">Backend design &amp; implementation</text>
+      <circle cx="66" cy="342" r="3.2" fill="url(#dotV)"/>
+      <text x="86" y="348">Integration</text>
     </g>
   </g>
 

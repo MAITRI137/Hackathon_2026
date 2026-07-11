@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" width="760" height="420" role="img" aria-labelledby="cmTitle">
-  <title id="cmTitle">Maitri — Team Leader: problem selection, product direction, UX, portal submission, final demo</title>
+  <title id="cmTitle">Maitri — Team Leader: problem selection and product direction, UI and UX, testing and validation, portal submission and final demo</title>
   <defs>
     <linearGradient id="ringM" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#A78BFA"/>
@@ -63,13 +63,13 @@
     <!-- responsibilities -->
     <g font-family="'SF Pro Display','SF Pro Text',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="18" fill="#FFFFFF" fill-opacity="0.68">
       <circle cx="66" cy="252" r="3.2" fill="url(#dotM)"/>
-      <text x="86" y="258">Problem selection</text>
+      <text x="86" y="258">Problem selection &amp; product direction</text>
       <circle cx="66" cy="288" r="3.2" fill="url(#dotM)"/>
-      <text x="86" y="294">Product direction &amp; UX</text>
+      <text x="86" y="294">UI &amp; UX</text>
       <circle cx="66" cy="324" r="3.2" fill="url(#dotM)"/>
-      <text x="86" y="330">Portal submission</text>
+      <text x="86" y="330">Testing &amp; validation</text>
       <circle cx="66" cy="360" r="3.2" fill="url(#dotM)"/>
-      <text x="86" y="366">Final demo</text>
+      <text x="86" y="366">Portal submission &amp; final demo</text>
     </g>
   </g>
 
