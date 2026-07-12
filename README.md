@@ -16,9 +16,13 @@
 ## Overview
 
 > [!NOTE]
-> This is the official public repository for our Odoo Hackathon 2026 virtual-round submission.
+> **TransitOps — Smart Transport Operations Platform.** Our Odoo Hackathon 2026 virtual-round submission.
 
-The problem statement is released at the beginning of the round. As soon as it is selected, this README will be updated with the final product name, problem definition, solution, architecture, setup instructions, demo evidence, and contribution summary.
+Logistics teams still run their fleets on spreadsheets and paper logbooks, which quietly cause scheduling clashes, idle vehicles, missed maintenance, expired driver licenses, and murky costs. **TransitOps** replaces that with one platform for the full transport lifecycle — vehicles, drivers, dispatch, maintenance, fuel, and expenses — with business rules enforced automatically and operational insight on a live dashboard.
+
+**Built for four roles:** Fleet Manager, Driver/Dispatcher, Safety Officer, and Financial Analyst — each with role-based access to the tools they need.
+
+Setup instructions, architecture, demo evidence, and the contribution summary will land here as the build progresses.
 
 <div align="center">
 <img src="assets/divider.svg" width="100%" alt="" />
