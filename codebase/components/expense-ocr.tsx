@@ -22,7 +22,7 @@ export function ExpenseOcr({
     setBusy(true);
     setRaw("");
     const { createWorker } = await import("tesseract.js");
-    const worker = await createWorker("eng", undefined, {
+    const worker = await createWorker("eng", 1, {
       logger: (m) =>
         m.status === "recognizing text" &&
         setProgress(Math.round((m.progress || 0) * 100)),
