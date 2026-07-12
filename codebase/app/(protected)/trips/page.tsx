@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { hasPermission } from "@/lib/auth/permissions";
 import { recommendDispatch } from "@/lib/dispatch";
+import { ClickableRow } from "@/components/clickable-row";
 import { locations, resolveRoute } from "@/lib/routes";
 import { RouteMap } from "@/components/ui/dynamic-map";
 import {
@@ -365,8 +366,16 @@ export default async function TripsPage({
           </thead>
           <tbody>
             {trips.map((t) => (
-              <tr key={t.id} className="border-b align-top last:border-0">
-                <td className="px-5 py-4 font-bold">{t.tripNumber}</td>
+              <ClickableRow
+                key={t.id}
+                className="border-b align-top last:border-0 hover:bg-muted/30"
+                href={`/trips/${t.id}`}
+              >
+                <td className="px-5 py-4 font-bold">
+                  <a href={`/trips/${t.id}`} className="text-primary hover:underline">
+                    {t.tripNumber}
+                  </a>
+                </td>
                 <td className="px-5 py-4">
                   {t.source} → {t.destination}
                   <span className="block text-xs text-muted-foreground">
@@ -395,17 +404,17 @@ export default async function TripsPage({
                 <td className="px-5 py-4">
                   {canManage && t.status === "DRAFT" && (
                     <div className="flex gap-3">
-                      <Form action={dispatchTrip}>
+                      <form action={dispatchTrip}>
                         <input type="hidden" name="id" value={t.id} />
-                        <button className="text-xs font-bold text-primary">
+                        <button type="submit" className="text-xs font-bold text-primary">
                           Dispatch
                         </button>
-                      </Form>
+                      </form>
                       <details>
                         <summary className="cursor-pointer text-xs font-bold text-destructive-foreground">
                           Cancel
                         </summary>
-                        <Form action={cancelTrip} className="mt-2 flex gap-2">
+                        <form action={cancelTrip} className="mt-2 flex gap-2">
                           <input type="hidden" name="id" value={t.id} />
                           <input
                             name="reason"
@@ -414,7 +423,7 @@ export default async function TripsPage({
                             className="rounded-full border px-2 text-xs"
                           />
                           <button>Confirm</button>
-                        </Form>
+                        </form>
                       </details>
                     </div>
                   )}
@@ -423,7 +432,7 @@ export default async function TripsPage({
                       <summary className="cursor-pointer text-xs font-bold text-primary">
                         Complete trip
                       </summary>
-                      <Form
+                      <form
                         action={completeTrip}
                         className="mt-2 grid w-52 gap-2"
                       >
@@ -450,11 +459,11 @@ export default async function TripsPage({
                           className={fieldClass}
                         />
                         <button className={buttonClass}>Complete</button>
-                      </Form>
+                      </form>
                     </details>
                   )}
                 </td>
-              </tr>
+              </ClickableRow>
             ))}
           </tbody>
         </table>

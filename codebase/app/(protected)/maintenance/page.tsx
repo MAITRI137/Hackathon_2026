@@ -10,6 +10,7 @@ import {
   StatCard,
   StatusBadge,
 } from "@/components/operations";
+import { ClickableCard } from "@/components/clickable-card";
 import {
   completeMaintenance,
   scheduleMaintenance,
@@ -48,7 +49,7 @@ export default async function MaintenancePage({
               <summary className="cursor-pointer font-bold text-primary">
                 + Add work order
               </summary>
-              <Form
+              <form
                 action={scheduleMaintenance}
                 className="mt-4 grid gap-3 sm:grid-cols-2"
               >
@@ -111,7 +112,7 @@ export default async function MaintenancePage({
                 <button className={`${buttonClass} sm:col-span-2`}>
                   Schedule maintenance
                 </button>
-              </Form>
+              </form>
             </details>
           )
         }
@@ -141,7 +142,11 @@ export default async function MaintenancePage({
       </section>
       <div className="grid gap-4 xl:grid-cols-3">
         {logs.map((log) => (
-          <article key={log.id} className={cardClass}>
+          <ClickableCard
+            key={log.id}
+            className={`${cardClass} hover:ring-2 hover:ring-primary/20 transition-all`}
+            href={`/maintenance/${log.id}`}
+          >
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs uppercase tracking-widest text-muted-foreground">
@@ -153,7 +158,11 @@ export default async function MaintenancePage({
               </div>
               <StatusBadge>{log.status}</StatusBadge>
             </div>
-            <h3 className="mt-5 font-bold">{log.serviceType}</h3>
+            <h3 className="mt-5 font-bold">
+              <a href={`/maintenance/${log.id}`} className="text-primary hover:underline">
+                {log.serviceType}
+              </a>
+            </h3>
             <p className="mt-1 text-sm text-muted-foreground">
               {log.description}
             </p>
@@ -185,13 +194,13 @@ export default async function MaintenancePage({
             {canManage && (
               <div className="mt-5">
                 {log.status === "SCHEDULED" && (
-                  <Form action={startMaintenance}>
+                  <form action={startMaintenance}>
                     <input type="hidden" name="id" value={log.id} />
                     <button className={buttonClass}>Start work</button>
-                  </Form>
+                  </form>
                 )}
                 {log.status === "IN_PROGRESS" && (
-                  <Form action={completeMaintenance} className="flex gap-2">
+                  <form action={completeMaintenance} className="flex gap-2">
                     <input type="hidden" name="id" value={log.id} />
                     <input
                       name="actualCost"
@@ -201,11 +210,11 @@ export default async function MaintenancePage({
                       className={`${fieldClass} min-w-0`}
                     />
                     <button className={buttonClass}>Complete</button>
-                  </Form>
+                  </form>
                 )}
               </div>
             )}
-          </article>
+          </ClickableCard>
         ))}
       </div>
     </div>

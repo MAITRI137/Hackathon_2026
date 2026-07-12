@@ -10,6 +10,7 @@ import {
   StatCard,
   StatusBadge,
 } from "@/components/operations";
+import { ClickableRow } from "@/components/clickable-row";
 import { VehicleAvatar } from "@/components/botanics";
 import {
   createVehicle,
@@ -74,16 +75,18 @@ export default async function VehiclesPage({
                   ["manufacturer", "Manufacturer"],
                   ["model", "Model"],
                   ["type", "Type"],
+                  ["fuelType", "Fuel type"],
                   ["region", "Region"],
                   ["maxLoadCapacity", "Capacity (kg)"],
                   ["odometer", "Odometer"],
+                  ["acquisitionCost", "Acquisition cost (₹)"],
                 ].map(([name, label]) => (
                   <label key={name} className="grid gap-1 text-xs font-bold">
                     {label}
                     <input
                       name={name}
                       type={
-                        name === "maxLoadCapacity" || name === "odometer"
+                        name === "maxLoadCapacity" || name === "odometer" || name === "acquisitionCost"
                           ? "number"
                           : "text"
                       }
@@ -162,15 +165,20 @@ export default async function VehiclesPage({
           </thead>
           <tbody>
             {vehicles.map((v) => (
-              <tr
+              <ClickableRow
                 key={v.id}
                 className="border-b last:border-0 hover:bg-muted/30"
+                href={`/vehicles/${v.id}`}
               >
                 <td className="px-5 py-4">
                   <span className="flex items-center gap-3">
                     <VehicleAvatar type={v.type} />
                     <span>
-                      <strong>{v.name}</strong>
+                      <strong>
+                        <a href={`/vehicles/${v.id}`} className="hover:underline text-primary">
+                          {v.name}
+                        </a>
+                      </strong>
                       <span className="block text-xs text-muted-foreground">
                         {v.registrationNumber}
                       </span>
@@ -206,7 +214,7 @@ export default async function VehiclesPage({
                         {document.type}
                       </a>
                       {canManage && (
-                        <Form action={deleteDocument}>
+                        <form action={deleteDocument}>
                           <input
                             type="hidden"
                             name="entityType"
@@ -220,7 +228,7 @@ export default async function VehiclesPage({
                           <button aria-label={`Delete ${document.type}`}>
                             ×
                           </button>
-                        </Form>
+                          </form>
                       )}
                     </span>
                   ))}
@@ -234,7 +242,7 @@ export default async function VehiclesPage({
                       <summary className="cursor-pointer text-xs font-bold text-primary">
                         Document
                       </summary>
-                      <Form
+                      <form
                         action={uploadDocument}
                         className="mt-2 grid w-56 gap-2"
                       >
@@ -270,19 +278,19 @@ export default async function VehiclesPage({
                         <button className="text-left text-xs font-bold text-primary">
                           Upload
                         </button>
-                      </Form>
+                      </form>
                     </details>
                     {v.status !== "RETIRED" && (
-                      <Form action={retireVehicle}>
+                      <form action={retireVehicle}>
                         <input type="hidden" name="id" value={v.id} />
-                        <button className="text-xs font-bold text-destructive-foreground">
+                        <button type="submit" className="text-xs font-bold text-destructive">
                           Retire
                         </button>
-                      </Form>
+                      </form>
                     )}
                   </td>
                 )}
-              </tr>
+              </ClickableRow>
             ))}
           </tbody>
         </table>

@@ -12,6 +12,7 @@ import {
   StatCard,
   StatusBadge,
 } from "@/components/operations";
+import { ClickableRow } from "@/components/clickable-row";
 import { decideExpense, submitExpense } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -151,9 +152,15 @@ export default async function FinancePage({
             </thead>
             <tbody>
               {expenses.map((x) => (
-                <tr key={x.id} className="border-b last:border-0">
+              <ClickableRow
+                key={x.id}
+                className="border-b last:border-0 hover:bg-muted/30"
+                href={`/finance/${x.id}`}
+              >
                   <td className="px-4 py-3">
-                    {x.description}
+                    <a href={`/finance/${x.id}`} className="text-primary hover:underline font-bold">
+                      {x.description}
+                    </a>
                     <span className="block text-xs text-muted-foreground">
                       {x.vehicle?.name || "General"}
                     </span>
@@ -169,18 +176,18 @@ export default async function FinancePage({
                     {canManage && x.status === "PENDING" && (
                       <div className="flex gap-2">
                         {["APPROVED", "REJECTED"].map((status) => (
-                          <Form key={status} action={decideExpense}>
+                          <form key={status} action={decideExpense}>
                             <input type="hidden" name="id" value={x.id} />
                             <input type="hidden" name="status" value={status} />
-                            <button className="text-xs font-bold text-primary">
+                            <button type="submit" className="text-xs font-bold text-primary">
                               {status === "APPROVED" ? "Approve" : "Reject"}
                             </button>
-                          </Form>
+                          </form>
                         ))}
                       </div>
                     )}
                   </td>
-                </tr>
+                </ClickableRow>
               ))}
             </tbody>
           </table>

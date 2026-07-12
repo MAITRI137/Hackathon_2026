@@ -11,6 +11,7 @@ import {
   StatCard,
   StatusBadge,
 } from "@/components/operations";
+import { ClickableRow } from "@/components/clickable-row";
 import { PersonAvatar } from "@/components/botanics";
 import {
   createDriver,
@@ -76,6 +77,7 @@ export default async function DriversPage({
                   ["licenceCategory", "Category"],
                   ["licenceExpiry", "Licence expiry"],
                   ["contactNumber", "Contact number"],
+                  ["emergencyContact", "Emergency contact"],
                   ["region", "Region"],
                   ["safetyScore", "Safety score"],
                 ].map(([name, label]) => (
@@ -167,12 +169,23 @@ export default async function DriversPage({
             {drivers.map((d) => {
               const compliance = driverCompliance(d);
               return (
-                <tr key={d.id} className="border-b last:border-0">
+                <ClickableRow
+                  key={d.id}
+                  className="border-b last:border-0 hover:bg-muted/30"
+                  href={`/drivers/${d.id}`}
+                >
                   <td className="px-5 py-4">
                     <span className="flex items-center gap-3">
                       <PersonAvatar name={d.name} />
                       <span>
-                        <strong>{d.name}</strong>
+                        <strong>
+                          <a
+                            href={`/drivers/${d.id}`}
+                            className="text-primary hover:underline"
+                          >
+                            {d.name}
+                          </a>
+                        </strong>
                         <span className="block text-xs text-muted-foreground">
                           {d.employeeId}
                         </span>
@@ -206,7 +219,7 @@ export default async function DriversPage({
                           {document.type}
                         </a>
                         {canManage && (
-                          <Form action={deleteDocument}>
+                          <form action={deleteDocument}>
                             <input
                               type="hidden"
                               name="entityType"
@@ -217,10 +230,10 @@ export default async function DriversPage({
                               name="fileId"
                               value={document.fileId}
                             />
-                            <button aria-label={`Delete ${document.type}`}>
-                              ×
+                            <button type="submit" className="text-xs text-destructive-foreground hover:underline">
+                              Delete
                             </button>
-                          </Form>
+                          </form>
                         )}
                       </span>
                     ))}
@@ -237,7 +250,7 @@ export default async function DriversPage({
                         <summary className="cursor-pointer text-xs font-bold text-primary">
                           Document
                         </summary>
-                        <Form
+                        <form
                           action={uploadDocument}
                           className="mt-2 grid w-56 gap-2"
                         >
@@ -265,12 +278,12 @@ export default async function DriversPage({
                             required
                             className="text-xs"
                           />
-                          <button className="text-left text-xs font-bold text-primary">
+                          <button type="submit" className="text-left text-xs font-bold text-primary">
                             Upload
                           </button>
-                        </Form>
+                        </form>
                       </details>
-                      <Form action={setDriverStatus}>
+                      <form action={setDriverStatus}>
                         <input type="hidden" name="id" value={d.id} />
                         <input
                           type="hidden"
@@ -279,13 +292,13 @@ export default async function DriversPage({
                             d.status === "SUSPENDED" ? "AVAILABLE" : "SUSPENDED"
                           }
                         />
-                        <button className="text-xs font-bold text-primary">
-                          {d.status === "SUSPENDED" ? "Reactivate" : "Suspend"}
+                        <button type="submit" className="text-xs font-bold text-primary">
+                          {d.status === "ACTIVE" ? "Suspend" : "Activate"}
                         </button>
-                      </Form>
+                      </form>
                     </td>
                   )}
-                </tr>
+                </ClickableRow>
               );
             })}
           </tbody>

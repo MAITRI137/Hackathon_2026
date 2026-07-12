@@ -27,7 +27,7 @@ export async function GET(
     headers: {
       "Content-Type": file.mimeType,
       "Content-Length": String(file.size),
-      "Content-Disposition": `attachment; filename="${filename}"`,
+      "Content-Disposition": `inline; filename="${filename}"`,
       "X-Content-Type-Options": "nosniff",
       "Cache-Control": "private, no-store",
     },

@@ -17,18 +17,51 @@ export function ExpenseOcr({
     typeof parseReceiptText
   > | null>(null);
   const [busy, setBusy] = useState(false);
+  const [preview, setPreview] = useState("");
 
   async function extract(file?: File) {
-    if (!file) return;
+    if (!file) {
+      setPreview("");
+      return;
+    }
     setBusy(true);
     setRaw("");
+    
+    let imageForOcr: File | string = file;
+    let previewDataUrl = "";
+
+    if (file.type === "application/pdf") {
+      const pdfjs = await import("pdfjs-dist");
+      pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+      
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+      const page = await pdf.getPage(1);
+      
+      const viewport = page.getViewport({ scale: 2.0 });
+      const canvas = document.createElement("canvas");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const context = canvas.getContext("2d");
+      
+      if (context) {
+        await page.render({ canvasContext: context, viewport, canvas } as any).promise;
+        previewDataUrl = canvas.toDataURL("image/png");
+        imageForOcr = previewDataUrl;
+      }
+    } else {
+      previewDataUrl = URL.createObjectURL(file);
+    }
+    
+    setPreview(previewDataUrl);
+
     const { createWorker } = await import("tesseract.js");
     const worker = await createWorker("eng", 1, {
       logger: (m) =>
         m.status === "recognizing text" &&
         setProgress(Math.round((m.progress || 0) * 100)),
     });
-    const result = await worker.recognize(file);
+    const result = await worker.recognize(imageForOcr);
     await worker.terminate();
     setRaw(result.data.text);
     setParsed(parseReceiptText(result.data.text));
@@ -48,10 +81,17 @@ export function ExpenseOcr({
         />
       </label>
 
+      {preview && (
+        <div className="sm:col-span-2 flex justify-center bg-muted/30 p-2 rounded-2xl border">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={preview} alt="Receipt preview" className="max-h-64 object-contain rounded-xl" />
+        </div>
+      )}
+
       {busy && (
         <div className="rounded-full bg-muted sm:col-span-2">
           <div
-            className="h-2 rounded-full bg-primary"
+            className="h-2 rounded-full bg-primary transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
