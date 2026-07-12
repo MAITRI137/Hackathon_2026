@@ -2,8 +2,8 @@
 
 | Milestone | Status | Validation | Commit |
 | --- | --- | --- | --- |
-| 0. Workspace and visual baseline | Complete | lint, typecheck, unit tests, build | pending (this commit) |
-| 1. Authentication and RBAC | In progress | existing auth tests pass; session coverage pending | - |
+| 0. Workspace and visual baseline | Complete | lint, typecheck, 8 unit tests, build | `75062a3` |
+| 1. Authentication and RBAC | Complete | password, session-token, permission and UI tests | pending (this commit) |
 | 2. Fleet master data | Pending | - | - |
 | 3. Trip dispatcher | Pending | - | - |
 | 4. Maintenance and finance | Pending | - | - |
@@ -18,4 +18,4 @@
 
 ## Next milestone
 
-Complete authentication/session tests, record audit events, and verify route-level RBAC.
+Implement the vehicle and driver models, deterministic seed data, validation, and registry screens.

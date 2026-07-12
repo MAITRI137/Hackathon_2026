@@ -16,7 +16,7 @@ function generateSessionToken(): string {
 /**
  * Hashes a session token for secure database storage.
  */
-function hashSessionToken(token: string): string {
+export function hashSessionToken(token: string): string {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
 
