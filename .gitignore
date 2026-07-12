@@ -23,3 +23,11 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Ignore hackathon root artifacts
+CODEX_HANDOFF.md
+Microsoft.Services.Store.winmd
+design-system-css.zip
+design-system-css/
+hackathon work/
+transitops-fleet-summary.pdf
