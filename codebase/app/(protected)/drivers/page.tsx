@@ -1,3 +1,4 @@
+import Form from "next/form";
 import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { hasPermission } from "@/lib/auth/permissions";
@@ -64,7 +65,7 @@ export default async function DriversPage({
               <summary className="cursor-pointer font-bold text-primary">
                 + Add driver
               </summary>
-              <form
+              <Form
                 action={createDriver}
                 className="mt-4 grid gap-3 sm:grid-cols-2"
               >
@@ -98,7 +99,7 @@ export default async function DriversPage({
                 <button className={`${buttonClass} sm:col-span-2`}>
                   Save driver
                 </button>
-              </form>
+              </Form>
             </details>
           )
         }
@@ -126,7 +127,7 @@ export default async function DriversPage({
           value={`${Math.round(drivers.reduce((s, d) => s + d.safetyScore, 0) / Math.max(drivers.length, 1))}%`}
         />
       </section>
-      <form className="mb-4 flex flex-wrap gap-3">
+      <Form action="" className="mb-4 flex flex-wrap gap-3">
         <input
           name="q"
           defaultValue={q}
@@ -140,7 +141,7 @@ export default async function DriversPage({
           ))}
         </select>
         <button className={buttonClass}>Filter</button>
-      </form>
+      </Form>
       <div className={`${cardClass} overflow-x-auto p-0`}>
         <table className="w-full min-w-[850px] text-left text-sm">
           <thead className="border-b bg-muted/60 text-xs uppercase tracking-wider text-muted-foreground">
@@ -205,7 +206,7 @@ export default async function DriversPage({
                           {document.type}
                         </a>
                         {canManage && (
-                          <form action={deleteDocument}>
+                          <Form action={deleteDocument}>
                             <input
                               type="hidden"
                               name="entityType"
@@ -219,7 +220,7 @@ export default async function DriversPage({
                             <button aria-label={`Delete ${document.type}`}>
                               ×
                             </button>
-                          </form>
+                          </Form>
                         )}
                       </span>
                     ))}
@@ -236,7 +237,7 @@ export default async function DriversPage({
                         <summary className="cursor-pointer text-xs font-bold text-primary">
                           Document
                         </summary>
-                        <form
+                        <Form
                           action={uploadDocument}
                           className="mt-2 grid w-56 gap-2"
                         >
@@ -267,9 +268,9 @@ export default async function DriversPage({
                           <button className="text-left text-xs font-bold text-primary">
                             Upload
                           </button>
-                        </form>
+                        </Form>
                       </details>
-                      <form action={setDriverStatus}>
+                      <Form action={setDriverStatus}>
                         <input type="hidden" name="id" value={d.id} />
                         <input
                           type="hidden"
@@ -281,7 +282,7 @@ export default async function DriversPage({
                         <button className="text-xs font-bold text-primary">
                           {d.status === "SUSPENDED" ? "Reactivate" : "Suspend"}
                         </button>
-                      </form>
+                      </Form>
                     </td>
                   )}
                 </tr>

@@ -1,4 +1,5 @@
 "use client";
+import Form from "next/form";
 
 import { useState } from "react";
 import { parseReceiptText } from "@/lib/ocr";
@@ -35,7 +36,7 @@ export function ExpenseOcr({
   }
 
   return (
-    <form action={submitExpense} className="grid gap-3 sm:grid-cols-2">
+    <Form action={submitExpense} className="grid gap-3 sm:grid-cols-2">
       <label className="grid gap-1 text-xs font-bold sm:col-span-2">
         Receipt image (Auto-fills amount & date)
         <input
@@ -144,6 +145,6 @@ export function ExpenseOcr({
       <button disabled={busy} className={`${buttonClass} sm:col-span-2`}>
         Submit for approval
       </button>
-    </form>
+    </Form>
   );
 }

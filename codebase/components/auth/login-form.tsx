@@ -1,4 +1,5 @@
 "use client";
+import Form from "next/form";
 
 import { useEffect, useRef, useState, useActionState } from "react";
 import { useFormStatus } from "react-dom";
@@ -69,7 +70,7 @@ export function LoginForm() {
           </CardDescription>
         </div>
       </CardHeader>
-      <form action={formAction} ref={formRef}>
+      <Form action={formAction} ref={formRef}>
         <CardContent className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-xs">
@@ -175,7 +176,7 @@ export function LoginForm() {
             <SubmitButton />
           </div>
         </CardContent>
-      </form>
+      </Form>
     </Card>
   );
 }

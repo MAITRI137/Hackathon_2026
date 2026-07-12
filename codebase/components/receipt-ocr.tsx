@@ -1,4 +1,5 @@
 "use client";
+import Form from "next/form";
 
 import { useState } from "react";
 import { parseReceiptText } from "@/lib/ocr";
@@ -45,7 +46,7 @@ export function ReceiptOcr({
         .includes(parsed.registrationNumber.replaceAll(/[ -]/g, ""))
   );
   return (
-    <form action={createFuelLog} className="grid gap-3">
+    <Form action={createFuelLog} className="grid gap-3">
       <label className="grid gap-1 text-xs font-bold">
         Receipt image
         <input
@@ -153,6 +154,6 @@ export function ReceiptOcr({
       <button disabled={!raw || busy} className={buttonClass}>
         Accept reviewed values & save
       </button>
-    </form>
+    </Form>
   );
 }

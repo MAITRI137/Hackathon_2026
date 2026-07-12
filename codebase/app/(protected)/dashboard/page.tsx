@@ -1,3 +1,4 @@
+import Form from "next/form";
 import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import {
@@ -100,7 +101,7 @@ export default async function DashboardPage({
         title="Dashboard"
         description="Fleet health, live work and cost signals in one calm operational surface."
         action={
-          <form className="flex gap-2">
+          <Form action="" className="flex gap-2">
             <select
               name="region"
               defaultValue={params?.region || ""}
@@ -124,7 +125,7 @@ export default async function DashboardPage({
             <button className="rounded-full bg-primary px-4 text-sm font-bold text-primary-foreground">
               Apply
             </button>
-          </form>
+          </Form>
         }
       />
 

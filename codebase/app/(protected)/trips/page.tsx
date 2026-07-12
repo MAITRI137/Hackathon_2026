@@ -1,3 +1,4 @@
+import Form from "next/form";
 import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { hasPermission } from "@/lib/auth/permissions";
@@ -114,7 +115,7 @@ export default async function TripsPage({
       </section>
       <div className="mb-6 grid gap-5 xl:grid-cols-[.9fr_1.1fr]">
         {canManage && (
-          <form action={createTrip} className={cardClass}>
+          <Form action={createTrip} className={cardClass}>
             <h2 className="mb-4 text-xl font-semibold">Create trip</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="grid gap-1 text-xs font-bold">
@@ -220,7 +221,7 @@ export default async function TripsPage({
                 Save draft
               </button>
             </div>
-          </form>
+          </Form>
         )}
         <section className={cardClass}>
           <div className="flex items-center justify-between">
@@ -394,17 +395,17 @@ export default async function TripsPage({
                 <td className="px-5 py-4">
                   {canManage && t.status === "DRAFT" && (
                     <div className="flex gap-3">
-                      <form action={dispatchTrip}>
+                      <Form action={dispatchTrip}>
                         <input type="hidden" name="id" value={t.id} />
                         <button className="text-xs font-bold text-primary">
                           Dispatch
                         </button>
-                      </form>
+                      </Form>
                       <details>
                         <summary className="cursor-pointer text-xs font-bold text-destructive-foreground">
                           Cancel
                         </summary>
-                        <form action={cancelTrip} className="mt-2 flex gap-2">
+                        <Form action={cancelTrip} className="mt-2 flex gap-2">
                           <input type="hidden" name="id" value={t.id} />
                           <input
                             name="reason"
@@ -413,7 +414,7 @@ export default async function TripsPage({
                             className="rounded-full border px-2 text-xs"
                           />
                           <button>Confirm</button>
-                        </form>
+                        </Form>
                       </details>
                     </div>
                   )}
@@ -422,7 +423,7 @@ export default async function TripsPage({
                       <summary className="cursor-pointer text-xs font-bold text-primary">
                         Complete trip
                       </summary>
-                      <form
+                      <Form
                         action={completeTrip}
                         className="mt-2 grid w-52 gap-2"
                       >
@@ -449,7 +450,7 @@ export default async function TripsPage({
                           className={fieldClass}
                         />
                         <button className={buttonClass}>Complete</button>
-                      </form>
+                      </Form>
                     </details>
                   )}
                 </td>

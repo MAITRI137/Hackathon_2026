@@ -1,3 +1,4 @@
+import Form from "next/form";
 import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { hasPermission } from "@/lib/auth/permissions";
@@ -63,7 +64,7 @@ export default async function VehiclesPage({
               <summary className="cursor-pointer font-bold text-primary">
                 + Add vehicle
               </summary>
-              <form
+              <Form
                 action={createVehicle}
                 className="mt-4 grid gap-3 sm:grid-cols-2"
               >
@@ -95,7 +96,7 @@ export default async function VehiclesPage({
                 <button className={`${buttonClass} sm:col-span-2`}>
                   Save vehicle
                 </button>
-              </form>
+              </Form>
             </details>
           )
         }
@@ -123,7 +124,7 @@ export default async function VehiclesPage({
           value={vehicles.filter((v) => v.status === "IN_SHOP").length}
         />
       </section>
-      <form className="mb-4 flex flex-wrap gap-3">
+      <Form action="" className="mb-4 flex flex-wrap gap-3">
         <input
           name="q"
           defaultValue={q}
@@ -137,7 +138,7 @@ export default async function VehiclesPage({
           ))}
         </select>
         <button className={buttonClass}>Filter</button>
-      </form>
+      </Form>
       <div className={`${cardClass} overflow-x-auto p-0`}>
         <table className="w-full min-w-[900px] text-left text-sm">
           <thead className="border-b bg-muted/60 text-xs uppercase tracking-wider text-muted-foreground">
@@ -205,7 +206,7 @@ export default async function VehiclesPage({
                         {document.type}
                       </a>
                       {canManage && (
-                        <form action={deleteDocument}>
+                        <Form action={deleteDocument}>
                           <input
                             type="hidden"
                             name="entityType"
@@ -219,7 +220,7 @@ export default async function VehiclesPage({
                           <button aria-label={`Delete ${document.type}`}>
                             ×
                           </button>
-                        </form>
+                        </Form>
                       )}
                     </span>
                   ))}
@@ -233,7 +234,7 @@ export default async function VehiclesPage({
                       <summary className="cursor-pointer text-xs font-bold text-primary">
                         Document
                       </summary>
-                      <form
+                      <Form
                         action={uploadDocument}
                         className="mt-2 grid w-56 gap-2"
                       >
@@ -269,15 +270,15 @@ export default async function VehiclesPage({
                         <button className="text-left text-xs font-bold text-primary">
                           Upload
                         </button>
-                      </form>
+                      </Form>
                     </details>
                     {v.status !== "RETIRED" && (
-                      <form action={retireVehicle}>
+                      <Form action={retireVehicle}>
                         <input type="hidden" name="id" value={v.id} />
                         <button className="text-xs font-bold text-destructive-foreground">
                           Retire
                         </button>
-                      </form>
+                      </Form>
                     )}
                   </td>
                 )}

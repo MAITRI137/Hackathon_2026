@@ -1,3 +1,4 @@
+import Form from "next/form";
 import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { hasPermission } from "@/lib/auth/permissions";
@@ -47,7 +48,7 @@ export default async function MaintenancePage({
               <summary className="cursor-pointer font-bold text-primary">
                 + Add work order
               </summary>
-              <form
+              <Form
                 action={scheduleMaintenance}
                 className="mt-4 grid gap-3 sm:grid-cols-2"
               >
@@ -110,7 +111,7 @@ export default async function MaintenancePage({
                 <button className={`${buttonClass} sm:col-span-2`}>
                   Schedule maintenance
                 </button>
-              </form>
+              </Form>
             </details>
           )
         }
@@ -184,13 +185,13 @@ export default async function MaintenancePage({
             {canManage && (
               <div className="mt-5">
                 {log.status === "SCHEDULED" && (
-                  <form action={startMaintenance}>
+                  <Form action={startMaintenance}>
                     <input type="hidden" name="id" value={log.id} />
                     <button className={buttonClass}>Start work</button>
-                  </form>
+                  </Form>
                 )}
                 {log.status === "IN_PROGRESS" && (
-                  <form action={completeMaintenance} className="flex gap-2">
+                  <Form action={completeMaintenance} className="flex gap-2">
                     <input type="hidden" name="id" value={log.id} />
                     <input
                       name="actualCost"
@@ -200,7 +201,7 @@ export default async function MaintenancePage({
                       className={`${fieldClass} min-w-0`}
                     />
                     <button className={buttonClass}>Complete</button>
-                  </form>
+                  </Form>
                 )}
               </div>
             )}

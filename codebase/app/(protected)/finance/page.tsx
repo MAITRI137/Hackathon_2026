@@ -1,3 +1,4 @@
+import Form from "next/form";
 import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { hasPermission } from "@/lib/auth/permissions";
@@ -168,13 +169,13 @@ export default async function FinancePage({
                     {canManage && x.status === "PENDING" && (
                       <div className="flex gap-2">
                         {["APPROVED", "REJECTED"].map((status) => (
-                          <form key={status} action={decideExpense}>
+                          <Form key={status} action={decideExpense}>
                             <input type="hidden" name="id" value={x.id} />
                             <input type="hidden" name="status" value={status} />
                             <button className="text-xs font-bold text-primary">
                               {status === "APPROVED" ? "Approve" : "Reject"}
                             </button>
-                          </form>
+                          </Form>
                         ))}
                       </div>
                     )}
