@@ -16,7 +16,6 @@
   <img src="assets/card-maitri.svg" width="49.4%" alt="Maitri" />
   <img src="assets/card-vyas.svg" width="49.4%" alt="Vyas Devgna" />
   <br/><br/>
-  <p><em>Both members contribute through their own GitHub identities. The latest stable build remains on <code>main</code>.</em></p>
 </div>
 
 <br/>
