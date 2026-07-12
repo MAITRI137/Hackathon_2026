@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" width="100%" height="100%">
+  <defs>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#2C2C24" flood-opacity="0.06" />
+    </filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDFCF8" />
+      <stop offset="100%" stop-color="#F3F4F1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="420" fill="url(#bg)" rx="24" />
+
+  <!-- Abstract organic orbit lines -->
+  <g transform="translate(450, 210)" fill="none" stroke-width="1.5">
+    <path d="M-150,0 A150,130 0 1,1 150,0 A150,130 0 1,1 -150,0" stroke="#DED8CF" stroke-dasharray="12 12" opacity="0.6">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="80s" repeatCount="indefinite" />
+    </path>
+    <path d="M-200,0 A200,180 0 1,0 200,0 A200,180 0 1,0 -200,0" stroke="#E6DCCD" stroke-dasharray="4 16" opacity="0.8">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="100s" repeatCount="indefinite" />
+    </path>
+  </g>
+
+  <!-- Connective soft lines fading out from center -->
+  <g transform="translate(450, 210)" fill="none" stroke="#DED8CF" stroke-width="1.5" opacity="0.3">
+    <!-- Center to nodes -->
+    <path d="M0,0 Q0,-65 0,-130" />
+    <path d="M0,0 Q50,-50 100,-100" />
+    <path d="M0,0 Q75,0 150,0" />
+    <path d="M0,0 Q50,50 100,100" />
+    <path d="M0,0 Q0,65 0,130" />
+    <path d="M0,0 Q-55,45 -110,90" />
+    <path d="M0,0 Q-75,0 -150,0" />
+    <path d="M0,0 Q-55,-45 -110,-90" />
+  </g>
+
+  <!-- Central node -->
+  <g transform="translate(450, 210)">
+    <circle cx="0" cy="0" r="45" fill="#5D7052" opacity="0.1" filter="url(#glow)">
+      <animate attributeName="r" values="45;55;45" dur="4s" repeatCount="indefinite" />
+    </circle>
+    <rect x="-60" y="-22" width="120" height="44" rx="22" fill="#5D7052" filter="url(#shadow)" />
+    <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#FDFCF8" text-anchor="middle" letter-spacing="0.5">TransitOps</text>
+  </g>
+
+  <!-- Orbiting nodes -->
+  <g transform="translate(450, 210)">
+    <!-- Dashboard -->
+    <g transform="translate(0, -130)">
+      <animateTransform attributeName="transform" type="translate" values="0,-130; 0,-136; 0,-130" dur="5s" repeatCount="indefinite" />
+      <rect x="-60" y="-18" width="120" height="36" rx="18" fill="#FFFFFF" stroke="#E6DCCD" stroke-width="1.5" filter="url(#shadow)" />
+      <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#2C2C24" text-anchor="middle">Dashboard</text>
+    </g>
+
+    <!-- Vehicles -->
+    <g transform="translate(100, -100)">
+      <animateTransform attributeName="transform" type="translate" values="100,-100; 104,-104; 100,-100" dur="4.2s" repeatCount="indefinite" />
+      <rect x="-50" y="-18" width="100" height="36" rx="18" fill="#FFFFFF" stroke="#E6DCCD" stroke-width="1.5" filter="url(#shadow)" />
+      <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#2C2C24" text-anchor="middle">Vehicles</text>
+    </g>
+
+    <!-- Drivers -->
+    <g transform="translate(150, 0)">
+      <animateTransform attributeName="transform" type="translate" values="150,0; 155,0; 150,0" dur="6s" repeatCount="indefinite" />
+      <rect x="-45" y="-18" width="90" height="36" rx="18" fill="#FFFFFF" stroke="#E6DCCD" stroke-width="1.5" filter="url(#shadow)" />
+      <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#2C2C24" text-anchor="middle">Drivers</text>
+    </g>
+
+    <!-- Trips -->
+    <g transform="translate(100, 100)">
+      <animateTransform attributeName="transform" type="translate" values="100,100; 104,104; 100,100" dur="5.5s" repeatCount="indefinite" />
+      <rect x="-40" y="-18" width="80" height="36" rx="18" fill="#FFFFFF" stroke="#E6DCCD" stroke-width="1.5" filter="url(#shadow)" />
+      <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#2C2C24" text-anchor="middle">Trips</text>
+    </g>
+
+    <!-- Maintenance -->
+    <g transform="translate(0, 130)">
+      <animateTransform attributeName="transform" type="translate" values="0,130; 0,136; 0,130" dur="6.5s" repeatCount="indefinite" />
+      <rect x="-60" y="-18" width="120" height="36" rx="18" fill="#FFFFFF" stroke="#E6DCCD" stroke-width="1.5" filter="url(#shadow)" />
+      <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#2C2C24" text-anchor="middle">Maintenance</text>
+    </g>
+
+    <!-- Fuel & Expenses -->
+    <g transform="translate(-110, 90)">
+      <animateTransform attributeName="transform" type="translate" values="-110,90; -114,94; -110,90" dur="4.8s" repeatCount="indefinite" />
+      <rect x="-75" y="-18" width="150" height="36" rx="18" fill="#FFFFFF" stroke="#E6DCCD" stroke-width="1.5" filter="url(#shadow)" />
+      <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#2C2C24" text-anchor="middle">Fuel &amp; Expenses</text>
+    </g>
+
+    <!-- Reports -->
+    <g transform="translate(-150, 0)">
+      <animateTransform attributeName="transform" type="translate" values="-150,0; -155,0; -150,0" dur="5.2s" repeatCount="indefinite" />
+      <rect x="-50" y="-18" width="100" height="36" rx="18" fill="#FFFFFF" stroke="#E6DCCD" stroke-width="1.5" filter="url(#shadow)" />
+      <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#2C2C24" text-anchor="middle">Reports</text>
+    </g>
+
+    <!-- Compliance -->
+    <g transform="translate(-110, -90)">
+      <animateTransform attributeName="transform" type="translate" values="-110,-90; -114,-94; -110,-90" dur="5.8s" repeatCount="indefinite" />
+      <rect x="-60" y="-18" width="120" height="36" rx="18" fill="#FFFFFF" stroke="#E6DCCD" stroke-width="1.5" filter="url(#shadow)" />
+      <text y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#2C2C24" text-anchor="middle">Compliance</text>
+    </g>
+  </g>
+</svg>

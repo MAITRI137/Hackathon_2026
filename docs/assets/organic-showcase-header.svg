@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 260" width="100%" height="100%">
+  <defs>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#2C2C24" flood-opacity="0.12" />
+    </filter>
+    
+    <filter id="text-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#FDFCF8" flood-opacity="0.8" />
+    </filter>
+
+    <filter id="blur-blob" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="30" />
+    </filter>
+
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.05 0" />
+    </filter>
+
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDFCF8" />
+      <stop offset="100%" stop-color="#EAEBE8" />
+    </linearGradient>
+
+    <linearGradient id="blob-green" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5D7052" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#3A4833" stop-opacity="0.1" />
+    </linearGradient>
+
+    <linearGradient id="blob-terra" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C18C5D" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#9C6B42" stop-opacity="0.05" />
+    </linearGradient>
+
+    <linearGradient id="blob-sand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E6DCCD" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#C3B49E" stop-opacity="0.2" />
+    </linearGradient>
+
+    <!-- Logo badge gradient -->
+    <linearGradient id="badge-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6F8562" />
+      <stop offset="100%" stop-color="#4B5A42" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="260" fill="url(#bg-grad)" />
+
+  <!-- Rich Organic Blurred Background Blobs -->
+  <g filter="url(#blur-blob)">
+    <!-- Sand Blob -->
+    <g transform="translate(200, 150)">
+      <animateTransform attributeName="transform" type="translate" values="200,150; 150,100; 250,200; 200,150" dur="20s" repeatCount="indefinite" />
+      <path d="M-150,-100 C-50,-200 150,-150 200,-50 C250,50 150,200 50,250 C-50,300 -200,150 -250,50 C-300,-50 -250,0 -150,-100 Z" fill="url(#blob-sand)">
+        <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="40s" repeatCount="indefinite" />
+      </path>
+    </g>
+    
+    <!-- Moss Green Blob -->
+    <g transform="translate(1000, 50)">
+      <animateTransform attributeName="transform" type="translate" values="1000,50; 1050,-20; 950,100; 1000,50" dur="25s" repeatCount="indefinite" />
+      <path d="M-150,-100 C-50,-200 100,-150 180,-50 C260,50 200,180 100,220 C0,260 -150,200 -200,100 C-250,0 -200,-50 -150,-100 Z" fill="url(#blob-green)">
+        <animateTransform attributeName="transform" type="rotate" values="360; 0" dur="50s" repeatCount="indefinite" />
+      </path>
+    </g>
+
+    <!-- Terracotta Blob -->
+    <g transform="translate(600, 250)">
+      <animateTransform attributeName="transform" type="translate" values="600,250; 650,200; 550,280; 600,250" dur="22s" repeatCount="indefinite" />
+      <path d="M-100,-80 C-20,-120 100,-80 150,-20 C200,40 120,120 50,150 C-20,180 -100,120 -150,50 C-200,-20 -180,-40 -100,-80 Z" fill="url(#blob-terra)">
+        <animateTransform attributeName="transform" type="rotate" values="0; -360" dur="45s" repeatCount="indefinite" />
+      </path>
+    </g>
+  </g>
+
+  <!-- Elegant Flowing Routes/Lines -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M-100,200 C 200,120 400,240 600,180 C 800,120 1000,240 1300,160" stroke="#5D7052" stroke-width="2.5" stroke-dasharray="12 24" opacity="0.4">
+      <animate attributeName="stroke-dashoffset" from="360" to="0" dur="20s" repeatCount="indefinite" linear="true" />
+    </path>
+    <path d="M-100,240 C 250,160 350,280 600,160 C 850,40 950,280 1300,120" stroke="#C18C5D" stroke-width="2" stroke-dasharray="6 18" opacity="0.3">
+      <animate attributeName="stroke-dashoffset" from="240" to="0" dur="25s" repeatCount="indefinite" linear="true" />
+    </path>
+    <path d="M-100,180 C 150,80 450,300 600,140 C 750,-20 1050,300 1300,100" stroke="#78786C" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.2">
+      <animate attributeName="stroke-dashoffset" from="120" to="0" dur="30s" repeatCount="indefinite" linear="true" />
+    </path>
+  </g>
+
+  <!-- Main Content Wrapper -->
+  <g transform="translate(600, 130)" text-anchor="middle">
+    
+    <!-- Sophisticated Logo Badge -->
+    <g transform="translate(0, -65)">
+      <!-- Outer soft ring -->
+      <circle cx="0" cy="0" r="42" fill="none" stroke="#E6DCCD" stroke-width="4" opacity="0.6" />
+      <circle cx="0" cy="0" r="36" fill="url(#badge-grad)" filter="url(#soft-shadow)" />
+      
+      <!-- Minimalist Route Icon -->
+      <circle cx="-12" cy="12" r="3.5" fill="none" stroke="#FDFCF8" stroke-width="2.5" />
+      <circle cx="12" cy="-12" r="3.5" fill="none" stroke="#FDFCF8" stroke-width="2.5" />
+      <path d="M-12,8 C-12,-4 12,4 12,-8" fill="none" stroke="#FDFCF8" stroke-width="2.5" stroke-linecap="round" />
+    </g>
+    
+    <!-- Typography -->
+    <text y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="40" font-weight="800" fill="#2C2C24" letter-spacing="-1" filter="url(#text-shadow)">TransitOps Prototype</text>
+    
+    <text y="60" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="18" font-weight="500" fill="#4A4A40" letter-spacing="-0.2" filter="url(#text-shadow)">A calm operations control tower for fleet, driver, trip, maintenance, fuel, and compliance workflows.</text>
+  </g>
+
+  <!-- Apply subtle grain over everything for organic feel -->
+  <rect width="1200" height="260" fill="transparent" filter="url(#grain)" opacity="0.8" pointer-events="none" />
+</svg>

@@ -56,6 +56,41 @@ Logistics teams still run their fleets on spreadsheets and paper logbooks, which
 </div>
 <br/>
 
+<!-- ═══════════════════════════ DESIGN SHOWCASE ═══════════════════════════ -->
+
+<div align="center">
+  <h2>✨ Design Showcase</h2>
+</div>
+
+<p align="center">
+  <img src="docs/assets/organic-showcase-header.svg" alt="TransitOps organic dashboard prototype animated header" width="100%" />
+</p>
+
+TransitOps uses an organic, calm, operations-focused design language: soft rice-paper surfaces, moss green actions, terracotta accents, rounded dashboard cards, natural motion, and generous whitespace. The interface direction is designed to make complex transport operations feel composed, readable, and human.
+
+<p align="center">
+  <img src="docs/assets/transitops-design-showcase.png" alt="TransitOps organic dashboard prototype showing dashboard and module UI elements" width="100%" />
+</p>
+
+<p align="center">
+  <img src="docs/assets/organic-motion-divider.svg" alt="Organic animated divider" width="100%" />
+</p>
+
+### Visual Direction
+
+- Organic dashboard layout with calm, high-density operational visibility.
+- Moss green primary actions, terracotta secondary accents, rice-paper surfaces, and soft timber borders.
+- Rounded cards, pill controls, tactile status badges, botanical details, and subtle motion.
+- Main focus: dashboard clarity, smart dispatch readiness, compliance visibility, analytics, and operational control.
+
+> This showcase represents the intended visual direction before full product development begins.
+
+<br/>
+<div align="center">
+  <img src="assets/divider.svg" width="100%" alt="" />
+</div>
+<br/>
+
 <!-- ══════════════════════════════ TECH STACK ══════════════════════════════ -->
 
 <div align="center">
@@ -102,8 +137,6 @@ Logistics teams still run their fleets on spreadsheets and paper logbooks, which
 - **Easy to demo**, test, and record locally.
 
 <br/>
-
-
 <div align="center">
   <img src="assets/divider.svg" width="100%" alt="" />
 </div>
