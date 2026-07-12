@@ -4,7 +4,7 @@ import re
 from PIL import Image
 from io import BytesIO
 
-def process_image(img_path, output_svg_path, name_shift=20):
+def process_image(img_path, output_svg_path, name_shift=15):
     # Resize image
     img = Image.open(img_path)
     # crop to square
@@ -12,7 +12,7 @@ def process_image(img_path, output_svg_path, name_shift=20):
     left = (img.width - min_dim) / 2
     top = (img.height - min_dim) / 2
     img = img.crop((left, top, left + min_dim, top + min_dim))
-    img = img.resize((200, 200), Image.Resampling.LANCZOS)
+    img = img.resize((150, 150), Image.Resampling.LANCZOS)
     
     # Save to buffer and base64 encode
     buffer = BytesIO()
@@ -27,8 +27,8 @@ def process_image(img_path, output_svg_path, name_shift=20):
     # Original cx=112, cy=118
     clip_cx = 112
     clip_cy = 118
-    clip_r = 68
-    stroke_r = 74
+    clip_r = 52
+    stroke_r = 58
     image_size = clip_r * 2
     image_x = clip_cx - clip_r
     image_y = clip_cy - clip_r
@@ -73,12 +73,12 @@ def process_image(img_path, output_svg_path, name_shift=20):
 process_image(
     r"C:\Users\Dev\.gemini\antigravity-ide\brain\582b9558-f264-4d56-b4de-795d5e1f91ed\media__1783836654125.png",
     r"c:\Users\Dev\Documents\Hackathon_2026_clean_tailnet\Hackathon_2026\assets\card-maitri.svg",
-    name_shift=40
+    name_shift=15
 )
 
 # Run for Vyas
 process_image(
-    r"C:\Users\Dev\.gemini\antigravity-ide\brain\582b9558-f264-4d56-b4de-795d5e1f91ed\media__1783835117294.png",
+    r"C:\Users\Dev\.gemini\antigravity-ide\brain\582b9558-f264-4d56-b4de-795d5e1f91ed\media__1783837087964.jpg",
     r"c:\Users\Dev\Documents\Hackathon_2026_clean_tailnet\Hackathon_2026\assets\card-vyas.svg",
-    name_shift=40
+    name_shift=15
 )
