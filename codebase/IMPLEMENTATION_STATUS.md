@@ -4,8 +4,8 @@
 | --- | --- | --- | --- |
 | 0. Workspace and visual baseline | Complete | lint, typecheck, 8 unit tests, build | `75062a3` |
 | 1. Authentication and RBAC | Complete | password, session-token, permission and UI tests | `37fb0a1` |
-| 2. Fleet master data | Complete | fleet rules, Prisma generation, deterministic seed, typecheck | pending (this commit) |
-| 3. Trip dispatcher | Pending | - | - |
+| 2. Fleet master data | Complete | fleet rules, Prisma generation, deterministic seed, typecheck | `3f10d2d` |
+| 3. Trip dispatcher | Complete | atomic transitions, recommendation engine, fallback route, typecheck/build | pending (this commit) |
 | 4. Maintenance and finance | Pending | - | - |
 | 5. Dashboard, reports, compliance | Pending | - | - |
 | 6. UI fidelity and responsive polish | Pending | - | - |
@@ -18,4 +18,4 @@
 
 ## Next milestone
 
-Implement atomic trip dispatch, completion/cancellation, recommendations, profitability and fallback routes.
+Implement maintenance transitions, fuel and expense workflows, database files, and reviewed receipt extraction.
