@@ -2,6 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  // @react-pdf/renderer must run from node_modules, not the webpack bundle
+  serverExternalPackages: ["@react-pdf/renderer"],
 };
 
 export default nextConfig;
