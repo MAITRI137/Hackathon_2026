@@ -13,8 +13,20 @@
 
 <div align="center">
   <h2>👥 Meet the Team</h2>
-  <img src="assets/card-maitri.svg" width="49.4%" alt="Maitri" />
-  <img src="assets/card-vyas.svg" width="49.4%" alt="Vyas Devgna" />
+  <a href="https://www.linkedin.com/in/maitri-kansagra-b16a3b281/" target="_blank">
+    <img src="assets/card-maitri.svg" width="49.4%" alt="Maitri" />
+  </a>
+  <a href="https://www.linkedin.com/in/devgna-vyas/" target="_blank">
+    <img src="assets/card-vyas.svg" width="49.4%" alt="Vyas Devgna" />
+  </a>
+  <br/><br/>
+  <a href="https://www.linkedin.com/in/maitri-kansagra-b16a3b281/" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-Maitri_Kansagra-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="Maitri LinkedIn" />
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://www.linkedin.com/in/devgna-vyas/" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-Vyas_Devgna-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="Vyas LinkedIn" />
+  </a>
   <br/><br/>
 </div>
 
