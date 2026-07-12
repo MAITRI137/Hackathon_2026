@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - next_cache:/app/.next
+      - sqlite_data:/app/data
+    environment:
+      - DATABASE_URL=file:/app/data/dev.db
+      - NEXT_PUBLIC_APP_NAME=TransitOps
+      - APP_ENV=development
+      - SESSION_SECRET=replace-with-local-dev-secret
+    # Startup command to safely push DB and run dev
+    command: >
+      sh -c "
+        npm install &&
+        npx prisma generate &&
+        npx prisma db push &&
+        npx tsx prisma/seed.ts &&
+        npm run dev
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  prisma-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5555:5555"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - sqlite_data:/app/data
+    environment:
+      - DATABASE_URL=file:/app/data/dev.db
+    command: npx prisma studio
+    depends_on:
+      - web
+
+volumes:
+  next_cache:
+  sqlite_data:

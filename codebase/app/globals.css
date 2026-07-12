@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 48 45% 98%; /* Rice Paper #FDFCF8 */
+    --foreground: 54 10% 16%; /* Deep Loam #2C2C24 */
+    
+    --card: 54 33% 98%; /* Near white beige #FEFEFA */
+    --card-foreground: 54 10% 16%;
+    
+    --popover: 54 33% 98%;
+    --popover-foreground: 54 10% 16%;
+    
+    --primary: 100 16% 38%; /* Moss Green #5D7052 */
+    --primary-foreground: 80 18% 95%; /* Pale Mist #F3F4F1 */
+    
+    --secondary: 28 42% 56%; /* Terracotta #C18C5D */
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 33 24% 92%; /* Stone #F0EBE5 */
+    --muted-foreground: 50 5% 45%; /* Dried Grass #78786C */
+    
+    --accent: 36 33% 85%; /* Sand #E6DCCD */
+    --accent-foreground: 54 7% 27%; /* Bark #4A4A40 */
+    
+    --destructive: 7 40% 47%; /* Burnt Sienna #A85448 */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 33 21% 84%; /* Raw Timber #DED8CF */
+    --input: 33 21% 84%;
+    --ring: 100 16% 38%;
+
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer utilities {
+  .shadow-organic {
+    box-shadow: 0 10px 40px -10px rgba(193,140,93,.2);
+  }
+  .shadow-moss {
+    box-shadow: 0 4px 20px -2px rgba(93,112,82,.15);
+  }
+}
