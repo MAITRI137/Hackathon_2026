@@ -15,7 +15,7 @@
   <h2>👥 Meet the Team</h2>
   
   <a href="https://www.linkedin.com/in/maitri-kansagra-b16a3b281/" target="_blank">
-    <img src="assets/card-maitri.svg" width="80%" alt="Maitri" />
+    <img src="assets/card-maitri.svg?v=1" width="80%" alt="Maitri" />
   </a>
   <br/>
   <a href="https://www.linkedin.com/in/maitri-kansagra-b16a3b281/" target="_blank">
@@ -24,7 +24,7 @@
   <br/><br/><br/>
   
   <a href="https://www.linkedin.com/in/devgna-vyas/" target="_blank">
-    <img src="assets/card-vyas.svg" width="80%" alt="Vyas Devgna" />
+    <img src="assets/card-vyas.svg?v=1" width="80%" alt="Vyas Devgna" />
   </a>
   <br/>
   <a href="https://www.linkedin.com/in/devgna-vyas/" target="_blank">
