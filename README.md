@@ -68,6 +68,7 @@ Logistics teams still run their fleets on spreadsheets and paper logbooks, which
     <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
     <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
     <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" />
+    <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   </p>
 </div>
 
@@ -89,6 +90,7 @@ Logistics teams still run their fleets on spreadsheets and paper logbooks, which
 | **Media** | DB-backed storage | Uploaded documents, licences, receipts (no local FS) |
 | **Validation** | Zod + Service Layer | Form validation and strict business rules |
 | **Icons** | lucide-react | Navigation and UI icons |
+| **Deployment** | Docker | Containerized deployment and easy runner setup |
 
 <br/>
 
