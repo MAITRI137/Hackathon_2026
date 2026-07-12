@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" width="760" height="420" role="img" aria-labelledby="cvTitle">
-  <title id="cvTitle">Vyas Devgna — Team Member: system architecture, backend implementation, integration</title>
+  <title id="cvTitle">Vyas Devgna — Team Member: System Architecture, Backend Design &amp; Implementation, Integration</title>
   <defs>
     <linearGradient id="ringV" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#34D399"/>
@@ -63,9 +63,9 @@
     <!-- responsibilities -->
     <g font-family="'SF Pro Display','SF Pro Text',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="18" fill="#FFFFFF" fill-opacity="0.68">
       <circle cx="66" cy="270" r="3.2" fill="url(#dotV)"/>
-      <text x="86" y="276">System architecture</text>
+      <text x="86" y="276">System Architecture</text>
       <circle cx="66" cy="306" r="3.2" fill="url(#dotV)"/>
-      <text x="86" y="312">Backend design &amp; implementation</text>
+      <text x="86" y="312">Backend Design &amp; Implementation</text>
       <circle cx="66" cy="342" r="3.2" fill="url(#dotV)"/>
       <text x="86" y="348">Integration</text>
     </g>
