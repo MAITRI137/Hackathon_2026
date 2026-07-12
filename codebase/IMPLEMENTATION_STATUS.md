@@ -3,8 +3,8 @@
 | Milestone | Status | Validation | Commit |
 | --- | --- | --- | --- |
 | 0. Workspace and visual baseline | Complete | lint, typecheck, 8 unit tests, build | `75062a3` |
-| 1. Authentication and RBAC | Complete | password, session-token, permission and UI tests | pending (this commit) |
-| 2. Fleet master data | Pending | - | - |
+| 1. Authentication and RBAC | Complete | password, session-token, permission and UI tests | `37fb0a1` |
+| 2. Fleet master data | Complete | fleet rules, Prisma generation, deterministic seed, typecheck | pending (this commit) |
 | 3. Trip dispatcher | Pending | - | - |
 | 4. Maintenance and finance | Pending | - | - |
 | 5. Dashboard, reports, compliance | Pending | - | - |
@@ -18,4 +18,4 @@
 
 ## Next milestone
 
-Implement the vehicle and driver models, deterministic seed data, validation, and registry screens.
+Implement atomic trip dispatch, completion/cancellation, recommendations, profitability and fallback routes.
