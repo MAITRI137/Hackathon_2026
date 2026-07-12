@@ -36,7 +36,7 @@ export async function createSession(userId: string): Promise<void> {
     },
   });
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: 'lax',
@@ -50,7 +50,7 @@ export async function createSession(userId: string): Promise<void> {
  * Retrieves the current session user from the cookie token.
  */
 export async function getCurrentSession(): Promise<SessionUser | null> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
   if (!token) return null;
@@ -103,7 +103,7 @@ export async function getCurrentSession(): Promise<SessionUser | null> {
  * Destroys the current session and clears the cookie.
  */
 export async function destroyCurrentSession(): Promise<void> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
   if (token) {

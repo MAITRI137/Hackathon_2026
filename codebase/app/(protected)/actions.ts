@@ -138,3 +138,47 @@ export async function cancelTrip(formData: FormData) {
   revalidatePath("/trips"); revalidatePath("/dashboard");
   redirect("/trips?message=Trip%20cancelled");
 }
+
+async function storeUpload(file: FormDataEntryValue | null, uploadedById: string) {
+  if (!(file instanceof File) || !file.size) return null;
+  const allowed = new Set(["application/pdf", "image/png", "image/jpeg"]);
+  if (!allowed.has(file.type) || file.size > 3 * 1024 * 1024) throw new Error("Receipt must be PDF, PNG or JPEG and no larger than 3 MB.");
+  const data = Buffer.from(await file.arrayBuffer());
+  const crypto = await import("crypto");
+  return db.storedFile.create({ data: { originalName: file.name.replace(/[^a-zA-Z0-9._-]/g, "_"), mimeType: file.type, size: file.size, data, checksum: crypto.createHash("sha256").update(data).digest("hex"), uploadedById } });
+}
+
+export async function scheduleMaintenance(formData: FormData) {
+  const user = await requirePermission("manage:maintenance");
+  const vehicleId = String(formData.get("vehicleId"));
+  await db.$transaction([db.maintenanceLog.create({ data: { vehicleId, serviceType: String(formData.get("serviceType")), description: String(formData.get("description")), scheduledDate: new Date(String(formData.get("scheduledDate"))), odometer: Number(formData.get("odometer")), vendor: String(formData.get("vendor") || ""), estimatedCost: Number(formData.get("estimatedCost") || 0), priority: String(formData.get("priority") || "MEDIUM") } }), db.auditLog.create({ data: { actorId: user.id, action: "SCHEDULE", entityType: "Maintenance", entityId: vehicleId } })]);
+  revalidatePath("/maintenance"); redirect("/maintenance?message=Maintenance%20scheduled");
+}
+
+export async function startMaintenance(formData: FormData) {
+  const user = await requirePermission("manage:maintenance"); const id = String(formData.get("id")); let failure="";
+  try { await db.$transaction(async tx => { const log=await tx.maintenanceLog.findUniqueOrThrow({where:{id},include:{vehicle:true}}); if(log.status!=="SCHEDULED") throw new Error("Only scheduled maintenance can start."); if(log.vehicle.status==="ON_TRIP") throw new Error(`Maintenance cannot start while ${log.vehicle.name} is on an active trip.`); if(log.vehicle.status==="RETIRED") throw new Error("Retired vehicles cannot enter maintenance."); await tx.maintenanceLog.update({where:{id},data:{status:"IN_PROGRESS",startedDate:new Date()}}); await tx.vehicle.update({where:{id:log.vehicleId},data:{status:"IN_SHOP"}}); await tx.auditLog.create({data:{actorId:user.id,action:"START",entityType:"Maintenance",entityId:id}}); }); } catch(error){failure=error instanceof Error?error.message:"Maintenance failed";}
+  revalidatePath("/maintenance"); revalidatePath("/vehicles"); redirect(`/maintenance?${failure?`error=${encodeURIComponent(failure)}`:"message=Maintenance%20started"}`);
+}
+
+export async function completeMaintenance(formData: FormData) {
+  const user = await requirePermission("manage:maintenance"); const id=String(formData.get("id")); const actualCost=Number(formData.get("actualCost"));
+  await db.$transaction(async tx=>{const log=await tx.maintenanceLog.findUniqueOrThrow({where:{id},include:{vehicle:true}});if(log.status!=="IN_PROGRESS")throw new Error("Only active maintenance can be completed.");await tx.maintenanceLog.update({where:{id},data:{status:"COMPLETED",completedDate:new Date(),actualCost}});if(log.vehicle.status!=="RETIRED")await tx.vehicle.update({where:{id:log.vehicleId},data:{status:"AVAILABLE"}});await tx.auditLog.create({data:{actorId:user.id,action:"COMPLETE",entityType:"Maintenance",entityId:id,details:`₹${actualCost}`}});});
+  revalidatePath("/maintenance"); revalidatePath("/vehicles"); redirect("/maintenance?message=Maintenance%20completed");
+}
+
+export async function createFuelLog(formData: FormData) {
+  const user=await requirePermission("manage:finance");const vehicleId=String(formData.get("vehicleId"));const litres=Number(formData.get("litres"));const cost=Number(formData.get("cost"));const odometer=Number(formData.get("odometer"));let failure="";
+  try {if(litres<=0||cost<=0)throw new Error("Fuel quantity and cost must be positive.");const vehicle=await db.vehicle.findUniqueOrThrow({where:{id:vehicleId}});if(odometer<vehicle.odometer)throw new Error("Odometer cannot decrease.");const receipt=await storeUpload(formData.get("receipt"),user.id);await db.$transaction([db.fuelLog.create({data:{vehicleId,date:new Date(String(formData.get("date"))),litres,cost,odometer,fuelStation:String(formData.get("fuelStation")||""),receiptFileId:receipt?.id,rawOcrText:String(formData.get("rawOcrText")||""),enteredById:user.id}}),db.vehicle.update({where:{id:vehicleId},data:{odometer}}),db.auditLog.create({data:{actorId:user.id,action:"CREATE",entityType:"FuelLog",entityId:vehicleId}})]);}catch(error){failure=error instanceof Error?error.message:"Fuel log failed";}
+  revalidatePath("/finance");redirect(`/finance?${failure?`error=${encodeURIComponent(failure)}`:"message=Fuel%20log%20saved"}`);
+}
+
+export async function submitExpense(formData: FormData) {
+  const user=await requirePermission("manage:finance");const amount=Number(formData.get("amount"));let failure="";
+  try {if(amount<=0)throw new Error("Expense amount must be positive.");const receipt=await storeUpload(formData.get("receipt"),user.id);const expense=await db.expense.create({data:{vehicleId:String(formData.get("vehicleId")||"")||null,category:String(formData.get("category")),amount,date:new Date(String(formData.get("date"))),description:String(formData.get("description")),receiptFileId:receipt?.id,rawOcrText:String(formData.get("rawOcrText")||""),submittedById:user.id}});await db.auditLog.create({data:{actorId:user.id,action:"SUBMIT",entityType:"Expense",entityId:expense.id}});}catch(error){failure=error instanceof Error?error.message:"Expense failed";}
+  revalidatePath("/finance");redirect(`/finance?${failure?`error=${encodeURIComponent(failure)}`:"message=Expense%20submitted"}`);
+}
+
+export async function decideExpense(formData: FormData) {
+  const user=await requirePermission("manage:finance");const id=String(formData.get("id"));const status=String(formData.get("status"));if(!["APPROVED","REJECTED"].includes(status))return;await db.$transaction([db.expense.update({where:{id},data:{status,approvedById:user.id,approvedAt:new Date()}}),db.auditLog.create({data:{actorId:user.id,action:status,entityType:"Expense",entityId:id}})]);revalidatePath("/finance");revalidatePath("/reports");
+}

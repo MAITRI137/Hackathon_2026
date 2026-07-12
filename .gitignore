@@ -1,0 +1,25 @@
+# Local-only coordination tools and state
+local-ops/
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+coverage/
+__pycache__/
+*.py[cod]
+
+# Local data, logs, and editor files
+*.log
+*.db
+*.sqlite
+*.sqlite3
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
