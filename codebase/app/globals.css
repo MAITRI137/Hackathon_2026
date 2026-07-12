@@ -4,35 +4,65 @@
 
 @layer base {
   :root {
-    --background: 48 45% 98%; /* Rice Paper #FDFCF8 */
-    --foreground: 54 10% 16%; /* Deep Loam #2C2C24 */
-    
-    --card: 54 33% 98%; /* Near white beige #FEFEFA */
-    --card-foreground: 54 10% 16%;
-    
-    --popover: 54 33% 98%;
-    --popover-foreground: 54 10% 16%;
-    
-    --primary: 100 16% 38%; /* Moss Green #5D7052 */
-    --primary-foreground: 80 18% 95%; /* Pale Mist #F3F4F1 */
-    
-    --secondary: 28 42% 56%; /* Terracotta #C18C5D */
-    --secondary-foreground: 0 0% 100%;
-    
-    --muted: 33 24% 92%; /* Stone #F0EBE5 */
-    --muted-foreground: 50 5% 45%; /* Dried Grass #78786C */
-    
-    --accent: 36 33% 85%; /* Sand #E6DCCD */
-    --accent-foreground: 54 7% 27%; /* Bark #4A4A40 */
-    
-    --destructive: 7 40% 47%; /* Burnt Sienna #A85448 */
-    --destructive-foreground: 0 0% 100%;
+    --background: 42 33% 95%; /* #F8F6F1 */
+    --foreground: 60 10% 15%; /* #2C2C24 */
 
-    --border: 33 21% 84%; /* Raw Timber #DED8CF */
-    --input: 33 21% 84%;
-    --ring: 100 16% 38%;
+    --card: 42 100% 98%; /* #FFFDF8 */
+    --card-foreground: 60 10% 15%; /* #2C2C24 */
 
-    --radius: 1rem;
+    --popover: 42 100% 98%;
+    --popover-foreground: 60 10% 15%;
+
+    --primary: 81 16% 40%; /* #6B7755 */
+    --primary-foreground: 0 0% 100%; /* White */
+
+    --secondary: 37 40% 88%; /* #EDE4D5 */
+    --secondary-foreground: 60 10% 15%;
+
+    --muted: 42 46% 97%; /* sidebar-bg #FBF9F4 */
+    --muted-foreground: 38 6% 50%; /* #8A8479 */
+
+    --accent: 20 61% 56%; /* #D47B4D */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 3 55% 94%; /* #F9EBEA */
+    --destructive-foreground: 5 58% 43%; /* #B03A2E */
+
+    --border: 39 19% 87%; /* #E6E2DA */
+    --input: 39 19% 87%;
+    --ring: 81 16% 40%; /* Primary */
+
+    --radius: 1.375rem; /* 22px */
+  }
+
+  .dark {
+    --background: 90 20% 1%; /* #050604 */
+    --foreground: 48 55% 98%; /* #FDFCF8 */
+
+    --card: 75 12% 6%; /* #11120E */
+    --card-foreground: 48 55% 98%;
+
+    --popover: 75 12% 6%;
+    --popover-foreground: 48 55% 98%;
+
+    --primary: 81 16% 40%; /* #6B7755 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 85 13% 10%; /* #1B1E17 */
+    --secondary-foreground: 48 55% 98%;
+
+    --muted: 80 15% 3%; /* #0A0B08 */
+    --muted-foreground: 38 6% 50%; /* #8A8479 */
+
+    --accent: 20 61% 56%; /* #D47B4D */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 38% 12%; /* #2D1414 */
+    --destructive-foreground: 7 66% 69%; /* #E58B7E */
+
+    --border: 80 13% 12%; /* #22251C */
+    --input: 80 13% 12%;
+    --ring: 81 16% 40%; /* Primary */
   }
 }
 
@@ -42,19 +72,27 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
   }
 }
 
 @layer utilities {
   .shadow-organic {
-    box-shadow: 0 10px 40px -10px rgba(193,140,93,.2);
+    box-shadow: 0 10px 40px -10px rgba(193, 140, 93, 0.2);
   }
   .shadow-moss {
-    box-shadow: 0 4px 20px -2px rgba(93,112,82,.15);
+    box-shadow: 0 4px 20px -2px rgba(93, 112, 82, 0.15);
   }
 }

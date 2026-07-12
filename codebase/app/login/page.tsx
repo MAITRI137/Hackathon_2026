@@ -2,6 +2,7 @@ import { LoginForm } from "@/components/auth/login-form";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { Leaf } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default async function LoginPage() {
   const user = await getCurrentUser();
@@ -10,7 +11,10 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F9F9F6]">
+    <div className="flex min-h-screen bg-background">
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
       {/* Left Column */}
       <div className="hidden lg:flex w-1/2 flex-col justify-center px-16 xl:px-24 relative overflow-hidden border-r border-muted-foreground/20">
         {/* Subtle leaf graphic background */}

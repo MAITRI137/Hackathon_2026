@@ -18,37 +18,34 @@ model User {
   email        String    @unique
   name         String
   passwordHash String
-  status       String    @default("ACTIVE") // ACTIVE, DISABLED
+  status       String    @default("ACTIVE")
   avatarUrl    String?
   lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-
   roleId       String
   role         Role      @relation(fields: [roleId], references: [id])
   sessions     Session[]
 }
 
 model Role {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   name        String
-  slug        String   @unique
+  slug        String           @unique
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   users       User[]
   permissions RolePermission[]
 }
 
 model Permission {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   action      String
   subject     String
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   roles       RolePermission[]
 
   @@unique([action, subject])
@@ -57,7 +54,6 @@ model Permission {
 model RolePermission {
   roleId       String
   permissionId String
-
   role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
@@ -65,18 +61,298 @@ model RolePermission {
 }
 
 model Session {
-  id          String   @id @default(cuid())
-  tokenHash   String   @unique
-  userId      String
-  expiresAt   DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userAgent   String?
-  ipAddress   String?
-
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userAgent String?
+  ipAddress String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
 }
 
+model Vehicle {
+  id                 String            @id @default(cuid())
+  registrationNumber String            @unique
+  name               String
+  manufacturer       String
+  model              String
+  type               String
+  region             String
+  maxLoadCapacity    Float
+  odometer           Float             @default(0)
+  acquisitionCost    Float             @default(0)
+  acquisitionDate    DateTime
+  fuelType           String
+  status             String            @default("AVAILABLE")
+  insuranceExpiry    DateTime
+  registrationExpiry DateTime
+  pollutionExpiry    DateTime
+  fitnessExpiry      DateTime
+  permitExpiry       DateTime
+  notes              String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  documents          VehicleDocument[]
+  trips              Trip[]
+  maintenanceLogs    MaintenanceLog[]
+  fuelLogs           FuelLog[]
+  expenses           Expense[]
+
+  @@index([status, region, type])
+}
+
+model Driver {
+  id               String           @id @default(cuid())
+  name             String
+  employeeId       String?          @unique
+  licenceNumber    String           @unique
+  licenceCategory  String
+  licenceExpiry    DateTime
+  contactNumber    String
+  region           String
+  safetyScore      Int              @default(80)
+  status           String           @default("AVAILABLE")
+  emergencyContact String?
+  dateJoined       DateTime
+  notes            String?
+  linkedUserId     String?          @unique
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  documents        DriverDocument[]
+  trips            Trip[]
+
+  @@index([status, region])
+}
+
+model StoredFile {
+  id                 String           @id @default(cuid())
+  originalName       String
+  mimeType           String
+  size               Int
+  data               Bytes
+  checksum           String?
+  uploadedById       String?
+  uploadedAt         DateTime         @default(now())
+  vehicleDocument    VehicleDocument?
+  driverDocument     DriverDocument?
+  maintenanceInvoice MaintenanceLog?  @relation("MaintenanceInvoice")
+  fuelReceipt        FuelLog?         @relation("FuelReceipt")
+  expenseReceipt     Expense?         @relation("ExpenseReceipt")
+}
+
+model VehicleDocument {
+  id        String     @id @default(cuid())
+  vehicleId String
+  fileId    String     @unique
+  type      String
+  expiresAt DateTime?
+  createdAt DateTime   @default(now())
+  vehicle   Vehicle    @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  file      StoredFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, type])
+}
+
+model DriverDocument {
+  id        String     @id @default(cuid())
+  driverId  String
+  fileId    String     @unique
+  type      String
+  expiresAt DateTime?
+  createdAt DateTime   @default(now())
+  driver    Driver     @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  file      StoredFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([driverId, type])
+}
+
+model Trip {
+  id                          String      @id @default(cuid())
+  tripNumber                  String      @unique
+  source                      String
+  destination                 String
+  sourceLat                   Float
+  sourceLng                   Float
+  destinationLat              Float
+  destinationLng              Float
+  plannedStart                DateTime
+  plannedCompletion           DateTime
+  vehicleId                   String?
+  driverId                    String?
+  cargoDescription            String
+  cargoWeight                 Float
+  plannedDistance             Float
+  estimatedDuration           Int
+  startingOdometer            Float?
+  finalOdometer               Float?
+  expectedRevenue             Float       @default(0)
+  estimatedFuelCost           Float       @default(0)
+  estimatedTollCost           Float       @default(0)
+  estimatedMaintenanceReserve Float       @default(0)
+  estimatedMargin             Float       @default(0)
+  actualFuelConsumed          Float?
+  actualFuelCost              Float?
+  actualStart                 DateTime?
+  actualCompletion            DateTime?
+  cancellationReason          String?
+  status                      String      @default("DRAFT")
+  createdAt                   DateTime    @default(now())
+  updatedAt                   DateTime    @updatedAt
+  vehicle                     Vehicle?    @relation(fields: [vehicleId], references: [id])
+  driver                      Driver?     @relation(fields: [driverId], references: [id])
+  events                      TripEvent[]
+  fuelLogs                    FuelLog[]
+  expenses                    Expense[]
+
+  @@index([status, plannedStart])
+  @@index([vehicleId, plannedStart, plannedCompletion])
+  @@index([driverId, plannedStart, plannedCompletion])
+}
+
+model TripEvent {
+  id          String   @id @default(cuid())
+  tripId      String
+  type        String
+  message     String
+  createdById String?
+  createdAt   DateTime @default(now())
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@index([tripId, createdAt])
+}
+
+model MaintenanceLog {
+  id            String      @id @default(cuid())
+  vehicleId     String
+  serviceType   String
+  description   String
+  scheduledDate DateTime
+  startedDate   DateTime?
+  completedDate DateTime?
+  odometer      Float
+  vendor        String?
+  technician    String?
+  estimatedCost Float       @default(0)
+  actualCost    Float?
+  priority      String      @default("MEDIUM")
+  status        String      @default("SCHEDULED")
+  notes         String?
+  invoiceFileId String?     @unique
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  vehicle       Vehicle     @relation(fields: [vehicleId], references: [id])
+  invoiceFile   StoredFile? @relation("MaintenanceInvoice", fields: [invoiceFileId], references: [id])
+
+  @@index([vehicleId, status, scheduledDate])
+}
+
+model FuelLog {
+  id            String      @id @default(cuid())
+  vehicleId     String
+  tripId        String?
+  date          DateTime
+  litres        Float
+  cost          Float
+  odometer      Float
+  fuelStation   String?
+  receiptFileId String?     @unique
+  rawOcrText    String?
+  enteredById   String?
+  createdAt     DateTime    @default(now())
+  vehicle       Vehicle     @relation(fields: [vehicleId], references: [id])
+  trip          Trip?       @relation(fields: [tripId], references: [id])
+  receiptFile   StoredFile? @relation("FuelReceipt", fields: [receiptFileId], references: [id])
+
+  @@index([vehicleId, date])
+}
+
+model Expense {
+  id            String      @id @default(cuid())
+  vehicleId     String?
+  tripId        String?
+  category      String
+  amount        Float
+  date          DateTime
+  description   String
+  receiptFileId String?     @unique
+  rawOcrText    String?
+  status        String      @default("PENDING")
+  submittedById String?
+  approvedById  String?
+  approvedAt    DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  vehicle       Vehicle?    @relation(fields: [vehicleId], references: [id])
+  trip          Trip?       @relation(fields: [tripId], references: [id])
+  receiptFile   StoredFile? @relation("ExpenseReceipt", fields: [receiptFileId], references: [id])
+
+  @@index([status, date, category])
+}
+
+model ComplianceAlert {
+  id           String    @id @default(cuid())
+  severity     String
+  entityType   String
+  entityId     String
+  message      String
+  dueDate      DateTime?
+  status       String    @default("OPEN")
+  resolvedById String?
+  resolvedAt   DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([status, severity, dueDate])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String?
+  title     String
+  message   String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model EmailOutbox {
+  id             String    @id @default(cuid())
+  recipient      String
+  subject        String
+  body           String
+  status         String    @default("PENDING")
+  sentAt         DateTime?
+  failureMessage String?
+  createdAt      DateTime  @default(now())
+
+  @@index([status, createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String
+  entityType String
+  entityId   String?
+  details    String?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+}
+
+model RouteCache {
+  id              String   @id @default(cuid())
+  source          String
+  destination     String
+  distanceKm      Float
+  durationMinutes Int
+  polylineJson    String
+  isFallback      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([source, destination])
+}
