@@ -102,28 +102,7 @@ Logistics teams still run their fleets on spreadsheets and paper logbooks, which
 
 <br/>
 
-### 📐 POC Architecture
 
-```mermaid
-flowchart TD
-    A[Browser / Client] -->|HTTP / React Server Components| B(Next.js App Router)
-    B -->|Server Actions / API Routes| C{Business Services & Validation}
-    C -->|Prisma ORM| D[(SQLite Database)]
-    
-    subgraph Data Layers
-    D --- D1[Business Records]
-    D --- D2[Users & Roles]
-    D --- D3[Uploaded Media]
-    D --- D4[Audit Logs & Alerts]
-    end
-    
-    style A fill:#000000,stroke:#333,stroke-width:2px,color:#fff
-    style B fill:#000000,stroke:#333,stroke-width:2px,color:#fff
-    style C fill:#1e293b,stroke:#334155,stroke-width:2px,color:#fff
-    style D fill:#0f172a,stroke:#334155,stroke-width:2px,color:#fff
-```
-
-<br/>
 <div align="center">
   <img src="assets/divider.svg" width="100%" alt="" />
 </div>
