@@ -7,7 +7,13 @@ import {
   operationalCost,
   tripsByDay,
 } from "@/lib/analytics";
-import { CountBars, Donut, DonutLegend, TrendLine } from "@/components/charts";
+import {
+  CountBars,
+  Donut,
+  DonutLegend,
+  TrendLine,
+  HalfDonut,
+} from "@/components/charts";
 import {
   cardClass,
   fieldClass,
@@ -15,6 +21,7 @@ import {
   StatCard,
   StatusBadge,
 } from "@/components/operations";
+import { DashboardMap } from "./dashboard-map";
 
 export const dynamic = "force-dynamic";
 export default async function DashboardPage({
@@ -24,7 +31,7 @@ export default async function DashboardPage({
 }) {
   await requirePermission("read:dashboard");
   const params = await searchParams;
-  const [vehicles, trips, drivers, maintenance, fuel, expenses, alerts] =
+  const [vehicles, trips, drivers, maintenance, fuel, expenses] =
     await Promise.all([
       db.vehicle.findMany({
         where: {
@@ -40,11 +47,6 @@ export default async function DashboardPage({
       db.maintenanceLog.findMany(),
       db.fuelLog.findMany(),
       db.expense.findMany({ where: { status: "APPROVED" } }),
-      db.complianceAlert.findMany({
-        where: { status: "OPEN" },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-      }),
     ]);
   const completed = trips.filter((t) => t.status === "COMPLETED");
   const distance = completed.reduce(
@@ -67,6 +69,30 @@ export default async function DashboardPage({
       value: vehicles.filter((v) => v.status === name).length,
     })
   );
+
+  // Prepare active route data for the map
+  const activeTrips = trips
+    .filter((t) => t.status === "DISPATCHED" && t.sourceLat && t.destinationLat)
+    .slice(0, 8)
+    .map((t) => ({
+      source: [t.sourceLat!, t.sourceLng!] as [number, number],
+      destination: [t.destinationLat!, t.destinationLng!] as [number, number],
+      label: `${t.source} → ${t.destination}`,
+    }));
+
+  // Also show last few completed routes for context
+  const recentCompleted = completed
+    .filter((t) => t.sourceLat && t.destinationLat)
+    .slice(0, 4)
+    .map((t) => ({
+      source: [t.sourceLat!, t.sourceLng!] as [number, number],
+      destination: [t.destinationLat!, t.destinationLng!] as [number, number],
+      label: `${t.source} → ${t.destination}`,
+      color: "#888",
+    }));
+
+  const mapRoutes = [...activeTrips, ...recentCompleted];
+
   return (
     <div>
       <PageHeader
@@ -81,7 +107,7 @@ export default async function DashboardPage({
               className={fieldClass}
             >
               <option value="">All regions</option>
-              {["West", "North", "South"].map((x) => (
+              {["West", "North", "South", "East"].map((x) => (
                 <option key={x}>{x}</option>
               ))}
             </select>
@@ -101,28 +127,109 @@ export default async function DashboardPage({
           </form>
         }
       />
-      <section className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+      {/* KPI Strip — matches PDF wireframe row of stat tiles */}
+      <section className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <StatCard
-          label="Fleet utilization"
-          value={`${fleetUtilization(vehicles)}%`}
-          detail="Active non-retired fleet"
+          label="Total vehicles"
+          value={vehicles.length}
+          detail={`${vehicles.filter((v) => v.status !== "RETIRED").length} active`}
+          seed={0}
+        />
+        <StatCard
+          label="Available"
+          value={vehicles.filter((v) => v.status === "AVAILABLE").length}
+          seed={1}
+        />
+        <StatCard
+          label="On trip"
+          value={vehicles.filter((v) => v.status === "ON_TRIP").length}
+          seed={2}
+        />
+        <StatCard
+          label="In maintenance"
+          value={vehicles.filter((v) => v.status === "IN_SHOP").length}
+          seed={3}
         />
         <StatCard
           label="Active trips"
           value={trips.filter((t) => t.status === "DISPATCHED").length}
-          detail={`${trips.filter((t) => t.status === "DRAFT").length} drafts ready`}
+          seed={0}
         />
         <StatCard
-          label="On-time performance"
+          label="Pending trips"
+          value={trips.filter((t) => t.status === "DRAFT").length}
+          seed={1}
+        />
+        <StatCard
+          label="Drivers on duty"
+          value={
+            drivers.filter(
+              (d) => d.status === "AVAILABLE" || d.status === "ON_TRIP"
+            ).length
+          }
+          detail={`${drivers.length} total`}
+          seed={2}
+        />
+        <StatCard
+          label="On-time rate"
           value={`${onTimePerformance(trips)}%`}
+          seed={3}
+        />
+        <StatCard
+          label="Fleet utilization"
+          value={`${fleetUtilization(vehicles)}%`}
+          detail="Active non-retired fleet"
+          seed={0}
+        />
+        <StatCard
+          label="Fuel efficiency"
+          value={`${fuelEfficiency(distance, litres)} km/L`}
+          seed={1}
+        />
+        <StatCard
+          label="Total distance"
+          value={`${distance.toLocaleString("en-IN")} km`}
+          seed={2}
         />
         <StatCard
           label="Operational cost"
           value={`₹${cost.toLocaleString("en-IN")}`}
-          detail={`${fuelEfficiency(distance, litres)} km/L fleet efficiency`}
+          seed={3}
         />
       </section>
+
       <div className="grid gap-5 xl:grid-cols-12">
+        {/* Route Map — real Leaflet tiles */}
+        <section className={`${cardClass} xl:col-span-7`}>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">
+            Route overview
+          </p>
+          <h2 className="mb-3 text-xl font-semibold">Active routes</h2>
+          <DashboardMap routes={mapRoutes} />
+          <p className="mt-2 text-xs text-muted-foreground">
+            {activeTrips.length} active · {recentCompleted.length} recent
+            completed
+          </p>
+        </section>
+
+        {/* Vehicle Status Donut */}
+        <section className={`${cardClass} xl:col-span-5`}>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">
+            Live fleet
+          </p>
+          <h2 className="text-xl font-semibold">Vehicle status</h2>
+          <div className="grid items-center sm:grid-cols-2">
+            <Donut
+              data={statusData}
+              centerValue={String(vehicles.length)}
+              centerLabel="Vehicles"
+            />
+            <DonutLegend data={statusData} />
+          </div>
+        </section>
+
+        {/* Trips Trend */}
         <section className={`${cardClass} xl:col-span-7`}>
           <div className="flex items-center justify-between">
             <div>
@@ -141,46 +248,37 @@ export default async function DashboardPage({
             )}
           />
         </section>
+
+        {/* Trips by Day */}
         <section className={`${cardClass} xl:col-span-5`}>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">
-            Live fleet
-          </p>
-          <h2 className="text-xl font-semibold">Vehicle status</h2>
-          <div className="grid items-center sm:grid-cols-2">
-            <Donut
-              data={statusData}
-              centerValue={String(vehicles.length)}
-              centerLabel="Vehicles"
-            />
-            <DonutLegend data={statusData} />
-          </div>
-        </section>
-        <section className={`${cardClass} xl:col-span-4`}>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">
             Demand rhythm
           </p>
           <h2 className="text-xl font-semibold">Trips by day</h2>
           <CountBars data={tripsByDay(trips)} />
         </section>
-        <section className={`${cardClass} xl:col-span-5`}>
+
+        {/* Recent Trips */}
+        <section className={`${cardClass} xl:col-span-7`}>
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Recent trips</h2>
             <a href="/trips" className="text-xs font-bold text-primary">
               View all
             </a>
           </div>
-          <ul className="mt-4 divide-y">
-            {trips.slice(0, 5).map((t) => (
+          <ul className="mt-4 divide-y divide-border/50">
+            {trips.slice(0, 6).map((t) => (
               <li
                 key={t.id}
                 className="flex items-center justify-between gap-3 py-3 text-sm"
               >
-                <div>
-                  <strong>
+                <div className="min-w-0">
+                  <strong className="block truncate">
                     {t.source} → {t.destination}
                   </strong>
                   <span className="block text-xs text-muted-foreground">
-                    {t.tripNumber} · {t.driver?.name || "Unassigned"}
+                    {t.tripNumber} · {t.driver?.name || "Unassigned"} ·{" "}
+                    {t.vehicle?.name || "—"}
                   </span>
                 </div>
                 <StatusBadge>{t.status}</StatusBadge>
@@ -188,74 +286,56 @@ export default async function DashboardPage({
             ))}
           </ul>
         </section>
-        <section className={`${cardClass} xl:col-span-3`}>
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Compliance</h2>
-            <a href="/compliance" className="text-xs font-bold text-primary">
-              Open centre
-            </a>
-          </div>
-          <ul className="mt-4 space-y-3">
-            {alerts.map((a) => (
-              <li key={a.id} className="rounded-2xl bg-muted p-3 text-xs">
-                <StatusBadge>{a.severity}</StatusBadge>
-                <p className="mt-2">{a.message}</p>
-              </li>
-            ))}
-            {!alerts.length && (
-              <li className="text-sm text-muted-foreground">No open alerts.</li>
-            )}
-          </ul>
-        </section>
-        <section className={`${cardClass} xl:col-span-7`}>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">
-            Route overview
-          </p>
-          <div className="grid gap-4 md:grid-cols-[1fr_180px]">
-            <div className="relative mt-3 min-h-44 overflow-hidden rounded-[1.5rem] bg-[#e8eadf] dark:bg-[#182016]">
-              <svg viewBox="0 0 500 180" className="h-full w-full">
-                <path
-                  d="M40 135 C140 30 300 155 455 42"
-                  fill="none"
-                  stroke="#5D7052"
-                  strokeWidth="6"
-                  strokeDasharray="10 8"
-                />
-                <circle cx="40" cy="135" r="9" fill="#5D7052" />
-                <circle cx="455" cy="42" r="9" fill="#C18C5D" />
-              </svg>
-            </div>
-            <div className="pt-5">
-              <h2 className="text-xl font-semibold">Mumbai → Pune</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                148 km · 3h 10m
-              </p>
-              <StatusBadge>DEMO ROUTE</StatusBadge>
-            </div>
-          </div>
-        </section>
+
+        {/* Maintenance Health */}
         <section className={`${cardClass} xl:col-span-5`}>
-          <h2 className="text-xl font-semibold">Maintenance health</h2>
-          <div className="mt-5 flex items-center gap-5">
-            <div className="grid h-28 w-28 place-items-center rounded-full border-[12px] border-primary/25 text-2xl font-bold">
-              {Math.max(
-                0,
-                100 -
-                  maintenance.filter((m) => m.status === "IN_PROGRESS").length *
-                    8
-              )}
-              %
-            </div>
+          <div className="mb-4 flex items-center justify-between">
             <div>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                Vehicle fitness
+              </p>
+              <h2 className="text-xl font-semibold">Maintenance health</h2>
+            </div>
+            <div className="text-right">
               <p className="font-bold text-primary">Good</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {maintenance.filter((m) => m.status === "SCHEDULED").length}{" "}
-                upcoming ·{" "}
-                {maintenance.filter((m) => m.status === "IN_PROGRESS").length}{" "}
+                upcoming
+                <br />
+                {
+                  maintenance.filter((m) => m.status === "IN_PROGRESS").length
+                }{" "}
                 active
               </p>
             </div>
           </div>
+
+          <HalfDonut
+            data={[
+              {
+                name: "Healthy",
+                value: Math.max(
+                  0,
+                  100 -
+                    maintenance.filter((m) => m.status === "IN_PROGRESS")
+                      .length *
+                      8
+                ),
+                color: "#5D7052",
+              },
+              {
+                name: "In Shop",
+                value: Math.min(
+                  100,
+                  maintenance.filter((m) => m.status === "IN_PROGRESS").length *
+                    8
+                ),
+                color: "#DED8CF",
+              },
+            ]}
+            centerValue={`${Math.max(0, 100 - maintenance.filter((m) => m.status === "IN_PROGRESS").length * 8)}%`}
+            centerLabel="Health Score"
+          />
         </section>
       </div>
     </div>

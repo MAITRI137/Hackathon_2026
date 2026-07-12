@@ -11,7 +11,9 @@ describe("csv export", () => {
   });
 
   it("serialises dates as ISO strings", () => {
-    expect(csvEscape(new Date("2026-07-12T00:00:00Z"))).toBe("2026-07-12T00:00:00.000Z");
+    expect(csvEscape(new Date("2026-07-12T00:00:00Z"))).toBe(
+      "2026-07-12T00:00:00.000Z"
+    );
   });
 
   it("builds a BOM-prefixed CRLF document", () => {

@@ -39,37 +39,39 @@ export function TrendLine({
   suffix?: string;
 }) {
   return (
-    <ResponsiveContainer width="100%" height={220}>
-      <LineChart
-        data={data}
-        margin={{ top: 10, right: 12, left: -18, bottom: 0 }}
-      >
-        <CartesianGrid
-          strokeDasharray="4 6"
-          stroke="currentColor"
-          opacity={0.12}
-        />
-        <XAxis
-          dataKey="label"
-          tick={{ fontSize: 11 }}
-          tickLine={false}
-          axisLine={false}
-        />
-        <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-        <Tooltip
-          contentStyle={tooltipStyle}
-          formatter={(v: number) => [`${v}${suffix}`, ""]}
-        />
-        <Line
-          type="monotone"
-          dataKey="value"
-          stroke="#5D7052"
-          strokeWidth={3}
-          dot={{ r: 4, fill: "#5D7052" }}
-          animationDuration={700}
-        />
-      </LineChart>
-    </ResponsiveContainer>
+    <div style={{ width: "100%", height: 220 }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          data={data}
+          margin={{ top: 10, right: 12, left: -18, bottom: 0 }}
+        >
+          <CartesianGrid
+            strokeDasharray="4 6"
+            stroke="currentColor"
+            opacity={0.12}
+          />
+          <XAxis
+            dataKey="label"
+            tick={{ fontSize: 11 }}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
+          <Tooltip
+            contentStyle={tooltipStyle}
+            formatter={(v: number) => [`${v}${suffix}`, ""]}
+          />
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke="#5D7052"
+            strokeWidth={3}
+            dot={{ r: 4, fill: "#5D7052" }}
+            animationDuration={700}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 
@@ -81,38 +83,40 @@ export function CountBars({
   color?: string;
 }) {
   return (
-    <ResponsiveContainer width="100%" height={200}>
-      <BarChart
-        data={data}
-        margin={{ top: 10, right: 12, left: -22, bottom: 0 }}
-      >
-        <CartesianGrid
-          strokeDasharray="4 6"
-          stroke="currentColor"
-          opacity={0.12}
-          vertical={false}
-        />
-        <XAxis
-          dataKey="label"
-          tick={{ fontSize: 11 }}
-          tickLine={false}
-          axisLine={false}
-        />
-        <YAxis
-          tick={{ fontSize: 11 }}
-          tickLine={false}
-          axisLine={false}
-          allowDecimals={false}
-        />
-        <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#5D705218" }} />
-        <Bar
-          dataKey="value"
-          fill={color}
-          radius={[10, 10, 4, 4]}
-          animationDuration={700}
-        />
-      </BarChart>
-    </ResponsiveContainer>
+    <div style={{ width: "100%", height: 200 }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          margin={{ top: 10, right: 12, left: -22, bottom: 0 }}
+        >
+          <CartesianGrid
+            strokeDasharray="4 6"
+            stroke="currentColor"
+            opacity={0.12}
+            vertical={false}
+          />
+          <XAxis
+            dataKey="label"
+            tick={{ fontSize: 11 }}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis
+            tick={{ fontSize: 11 }}
+            tickLine={false}
+            axisLine={false}
+            allowDecimals={false}
+          />
+          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#5D705218" }} />
+          <Bar
+            dataKey="value"
+            fill={color}
+            radius={[4, 4, 0, 0]}
+            animationDuration={700}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 
@@ -128,25 +132,27 @@ export function Donut({
   const filled = data.filter((d) => d.value > 0);
   return (
     <div className="relative">
-      <ResponsiveContainer width="100%" height={210}>
-        <PieChart>
-          <Tooltip contentStyle={tooltipStyle} />
-          <Pie
-            data={filled}
-            dataKey="value"
-            nameKey="name"
-            innerRadius={62}
-            outerRadius={88}
-            paddingAngle={3}
-            strokeWidth={0}
-            animationDuration={700}
-          >
-            {filled.map((_, i) => (
-              <Cell key={i} fill={chartPalette[i % chartPalette.length]} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
+      <div style={{ width: "100%", height: 210 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Tooltip contentStyle={tooltipStyle} />
+            <Pie
+              data={filled}
+              dataKey="value"
+              nameKey="name"
+              innerRadius={62}
+              outerRadius={88}
+              paddingAngle={3}
+              strokeWidth={0}
+              animationDuration={700}
+            >
+              {filled.map((_, i) => (
+                <Cell key={i} fill={chartPalette[i % chartPalette.length]} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
       {centerValue && (
         <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
           <div>
@@ -157,6 +163,61 @@ export function Donut({
               <p className="text-xs text-muted-foreground">{centerLabel}</p>
             )}
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function HalfDonut({
+  data,
+  centerValue,
+  centerLabel,
+}: {
+  data: { name: string; value: number; color?: string }[];
+  centerValue?: string;
+  centerLabel?: string;
+}) {
+  const filled = data.filter((d) => d.value > 0);
+  return (
+    <div className="relative">
+      <div style={{ width: "100%", height: 140 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Tooltip contentStyle={tooltipStyle} />
+            <Pie
+              data={filled}
+              dataKey="value"
+              nameKey="name"
+              startAngle={180}
+              endAngle={0}
+              cy={100}
+              innerRadius={62}
+              outerRadius={88}
+              paddingAngle={3}
+              strokeWidth={0}
+              animationDuration={700}
+            >
+              {filled.map((entry, i) => (
+                <Cell
+                  key={i}
+                  fill={entry.color || chartPalette[i % chartPalette.length]}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      {centerValue && (
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 pb-2 text-center">
+          <p className="font-heading text-3xl font-semibold tabular-nums text-primary">
+            {centerValue}
+          </p>
+          {centerLabel && (
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              {centerLabel}
+            </p>
+          )}
         </div>
       )}
     </div>

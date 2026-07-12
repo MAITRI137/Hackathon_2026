@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { hasPermission } from "@/lib/auth/permissions";
 import { ReceiptOcr } from "@/components/receipt-ocr";
+import { ExpenseOcr } from "@/components/expense-ocr";
 import {
   buttonClass,
   cardClass,
@@ -69,99 +70,31 @@ export default async function FinancePage({
           value={`${(fuel.reduce((s, x) => s + (x.tripId ? 1 : 0), 0) ? 6.2 : 0).toFixed(1)} km/L`}
         />
       </section>
-      {canManage && (
-        <div className="mb-6 grid gap-5 xl:grid-cols-2">
-          <section className={cardClass}>
-            <p className="text-xs font-bold uppercase tracking-widest text-primary">
-              Receipt OCR
-            </p>
-            <h2 className="mb-4 mt-1 text-xl font-semibold">
-              Extract, review, then save fuel
-            </h2>
-            <ReceiptOcr
-              vehicles={vehicles.map((v) => ({
-                id: v.id,
-                name: v.name,
-                registrationNumber: v.registrationNumber,
-                odometer: v.odometer,
-              }))}
-            />
-          </section>
-          <section className={cardClass}>
-            <p className="text-xs font-bold uppercase tracking-widest text-primary">
-              Expense workflow
-            </p>
-            <h2 className="mb-4 mt-1 text-xl font-semibold">Submit expense</h2>
-            <form action={submitExpense} className="grid gap-3 sm:grid-cols-2">
-              <label className="grid gap-1 text-xs font-bold">
-                Vehicle
-                <select name="vehicleId" className={fieldClass}>
-                  <option value="">General</option>
-                  {vehicles.map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="grid gap-1 text-xs font-bold">
-                Category
-                <select name="category" className={fieldClass}>
-                  {[
-                    "Fuel",
-                    "Toll",
-                    "Parking",
-                    "Repair",
-                    "Maintenance",
-                    "Fine",
-                    "Loading/Unloading",
-                    "Driver Allowance",
-                    "Miscellaneous",
-                  ].map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="grid gap-1 text-xs font-bold">
-                Amount
-                <input
-                  name="amount"
-                  type="number"
-                  step=".01"
-                  required
-                  className={fieldClass}
-                />
-              </label>
-              <label className="grid gap-1 text-xs font-bold">
-                Date
-                <input
-                  name="date"
-                  type="date"
-                  defaultValue={new Date().toISOString().slice(0, 10)}
-                  required
-                  className={fieldClass}
-                />
-              </label>
-              <label className="grid gap-1 text-xs font-bold sm:col-span-2">
-                Description
-                <input name="description" required className={fieldClass} />
-              </label>
-              <label className="grid gap-1 text-xs font-bold sm:col-span-2">
-                Receipt
-                <input
-                  name="receipt"
-                  type="file"
-                  accept="image/png,image/jpeg,application/pdf"
-                  className={fieldClass}
-                />
-              </label>
-              <button className={`${buttonClass} sm:col-span-2`}>
-                Submit for approval
-              </button>
-            </form>
-          </section>
-        </div>
-      )}
+      <div className="mb-6 grid gap-5 xl:grid-cols-2">
+        <section className={cardClass}>
+          <p className="text-xs font-bold uppercase tracking-widest text-primary">
+            Receipt OCR
+          </p>
+          <h2 className="mb-4 mt-1 text-xl font-semibold">
+            Extract, review, then save fuel
+          </h2>
+          <ReceiptOcr
+            vehicles={vehicles.map((v) => ({
+              id: v.id,
+              name: v.name,
+              registrationNumber: v.registrationNumber,
+              odometer: v.odometer,
+            }))}
+          />
+        </section>
+        <section className={cardClass}>
+          <p className="text-xs font-bold uppercase tracking-widest text-primary">
+            Expense workflow
+          </p>
+          <h2 className="mb-4 mt-1 text-xl font-semibold">Submit expense</h2>
+          <ExpenseOcr vehicles={vehicles} />
+        </section>
+      </div>
       <div className="grid gap-5 xl:grid-cols-2">
         <section className={`${cardClass} overflow-x-auto p-0`}>
           <h2 className="p-5 text-xl font-semibold">Recent fuel logs</h2>

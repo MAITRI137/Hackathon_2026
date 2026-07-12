@@ -10,11 +10,14 @@ export default async function ProtectedLayout({
   const user = await requireUser();
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar user={user} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Topbar user={user} />
-        <main className="flex-1 overflow-y-auto bg-muted/30 p-4 sm:p-8">
+        <main
+          id="main-content"
+          className="flex-1 overflow-y-auto bg-muted/30 p-4 sm:p-8"
+        >
           {children}
         </main>
       </div>

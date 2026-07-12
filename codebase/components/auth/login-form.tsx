@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useRef, useState, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { loginAction } from "@/app/login/actions";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Leaf, Eye, EyeOff, ChevronDown } from "lucide-react";
 
 export function LoginForm() {
-  const [state, formAction] = useFormState(loginAction, {
+  const [state, formAction] = useActionState(loginAction, {
     message: null,
     errors: {},
   });
@@ -80,7 +80,7 @@ export function LoginForm() {
               name="email"
               type="email"
               ref={emailRef}
-              placeholder="admin@transitops.local"
+              placeholder="fleet@transitops.local"
               required
               aria-describedby="email-error"
               className="h-11 rounded-xl border-0 bg-background"
@@ -136,14 +136,12 @@ export function LoginForm() {
                 className="flex h-11 w-full appearance-none items-center justify-between rounded-xl border-0 bg-background px-3 py-2 pr-8 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="">Select a role...</option>
-                <option value="admin@transitops.local">Administrator</option>
                 <option value="fleet@transitops.local">Fleet Manager</option>
-                <option value="dispatcher@transitops.local">Dispatcher</option>
+                <option value="driver@transitops.local">Driver</option>
                 <option value="safety@transitops.local">Safety Officer</option>
                 <option value="finance@transitops.local">
                   Financial Analyst
                 </option>
-                <option value="driver@transitops.local">Driver</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                 <ChevronDown className="h-4 w-4 opacity-50" />

@@ -1,35 +1,30 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { Prisma, PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database with roles, permissions, and demo users...');
+  console.log("Seeding database with roles, permissions, and demo data...");
 
-  // 1. Define Permissions
+  // ── 1. Permissions ──
   const permissionsData = [
-    { action: 'read', subject: 'dashboard' },
-    { action: 'read', subject: 'vehicles' },
-    { action: 'manage', subject: 'vehicles' },
-    { action: 'read', subject: 'drivers' },
-    { action: 'manage', subject: 'drivers' },
-    { action: 'read', subject: 'trips' },
-    { action: 'manage', subject: 'trips' },
-    { action: 'read', subject: 'maintenance' },
-    { action: 'manage', subject: 'maintenance' },
-    { action: 'read', subject: 'finance' },
-    { action: 'manage', subject: 'finance' },
-    { action: 'read', subject: 'reports' },
-    { action: 'export', subject: 'reports' },
-    { action: 'read', subject: 'compliance' },
-    { action: 'manage', subject: 'compliance' },
-    { action: 'read', subject: 'settings' },
-    { action: 'manage', subject: 'settings' },
-    { action: 'manage', subject: 'users' },
-    { action: 'manage', subject: 'roles' },
+    { action: "read", subject: "dashboard" },
+    { action: "read", subject: "vehicles" },
+    { action: "manage", subject: "vehicles" },
+    { action: "read", subject: "drivers" },
+    { action: "manage", subject: "drivers" },
+    { action: "read", subject: "trips" },
+    { action: "manage", subject: "trips" },
+    { action: "read", subject: "maintenance" },
+    { action: "manage", subject: "maintenance" },
+    { action: "read", subject: "finance" },
+    { action: "manage", subject: "finance" },
+    { action: "read", subject: "reports" },
+    { action: "export", subject: "reports" },
+    { action: "manage", subject: "users" },
+    { action: "manage", subject: "roles" },
   ];
 
-  // Upsert all permissions
   const permissions = await Promise.all(
     permissionsData.map((p) =>
       prisma.permission.upsert({
@@ -41,87 +36,68 @@ async function main() {
   );
   console.log(`Ensured ${permissions.length} permissions exist.`);
 
-  // 2. Define Roles and Their Permissions
+  // ── 2. Roles (PDF: Fleet Manager, Driver, Safety Officer, Financial Analyst) ──
   const roleDefinitions = [
     {
-      slug: 'admin',
-      name: 'Administrator',
-      permissions: permissionsData, // Admin gets everything
-    },
-    {
-      slug: 'fleet_manager',
-      name: 'Fleet Manager',
+      slug: "fleet_manager",
+      name: "Fleet Manager",
       permissions: [
-        { action: 'read', subject: 'dashboard' },
-        { action: 'read', subject: 'vehicles' },
-        { action: 'manage', subject: 'vehicles' },
-        { action: 'read', subject: 'drivers' },
-        { action: 'read', subject: 'trips' },
-        { action: 'read', subject: 'maintenance' },
-        { action: 'manage', subject: 'maintenance' },
-        { action: 'read', subject: 'reports' },
+        { action: "read", subject: "dashboard" },
+        { action: "read", subject: "vehicles" },
+        { action: "manage", subject: "vehicles" },
+        { action: "read", subject: "drivers" },
+        { action: "read", subject: "trips" },
+        { action: "read", subject: "maintenance" },
+        { action: "manage", subject: "maintenance" },
+        { action: "read", subject: "reports" },
+        { action: "export", subject: "reports" },
       ],
     },
     {
-      slug: 'dispatcher',
-      name: 'Dispatcher',
+      slug: "driver",
+      name: "Driver",
       permissions: [
-        { action: 'read', subject: 'dashboard' },
-        { action: 'read', subject: 'vehicles' },
-        { action: 'read', subject: 'drivers' },
-        { action: 'read', subject: 'trips' },
-        { action: 'manage', subject: 'trips' },
-        { action: 'read', subject: 'maintenance' },
-        { action: 'read', subject: 'finance' },
-        { action: 'manage', subject: 'finance' },
+        { action: "read", subject: "dashboard" },
+        { action: "read", subject: "vehicles" },
+        { action: "read", subject: "drivers" },
+        { action: "read", subject: "trips" },
+        { action: "manage", subject: "trips" },
+        { action: "read", subject: "maintenance" },
+        { action: "read", subject: "finance" },
       ],
     },
     {
-      slug: 'safety_officer',
-      name: 'Safety Officer',
+      slug: "safety_officer",
+      name: "Safety Officer",
       permissions: [
-        { action: 'read', subject: 'dashboard' },
-        { action: 'read', subject: 'drivers' },
-        { action: 'manage', subject: 'drivers' },
-        { action: 'read', subject: 'compliance' },
-        { action: 'manage', subject: 'compliance' },
-        { action: 'read', subject: 'reports' },
+        { action: "read", subject: "dashboard" },
+        { action: "read", subject: "drivers" },
+        { action: "manage", subject: "drivers" },
+        { action: "read", subject: "reports" },
       ],
     },
     {
-      slug: 'financial_analyst',
-      name: 'Financial Analyst',
+      slug: "financial_analyst",
+      name: "Financial Analyst",
       permissions: [
-        { action: 'read', subject: 'dashboard' },
-        { action: 'read', subject: 'vehicles' },
-        { action: 'read', subject: 'drivers' },
-        { action: 'read', subject: 'trips' },
-        { action: 'read', subject: 'finance' },
-        { action: 'manage', subject: 'finance' },
-        { action: 'read', subject: 'reports' },
-        { action: 'export', subject: 'reports' },
-      ],
-    },
-    {
-      slug: 'driver',
-      name: 'Driver',
-      permissions: [
-        { action: 'read', subject: 'dashboard' },
-        { action: 'read', subject: 'trips' },
-        { action: 'read', subject: 'finance' },
+        { action: "read", subject: "dashboard" },
+        { action: "read", subject: "vehicles" },
+        { action: "read", subject: "drivers" },
+        { action: "read", subject: "trips" },
+        { action: "read", subject: "finance" },
+        { action: "manage", subject: "finance" },
+        { action: "read", subject: "reports" },
+        { action: "export", subject: "reports" },
       ],
     },
   ];
 
   for (const roleDef of roleDefinitions) {
-    // Ensure Role exists
     const role = await prisma.role.upsert({
       where: { slug: roleDef.slug },
       update: { name: roleDef.name },
       create: { slug: roleDef.slug, name: roleDef.name },
     });
-
-    // Resolve Permission IDs for this role
     const rolePermissions = await Promise.all(
       roleDef.permissions.map(async (p) => {
         const perm = await prisma.permission.findUniqueOrThrow({
@@ -130,13 +106,7 @@ async function main() {
         return perm.id;
       })
     );
-
-    // Delete existing mappings to ensure clean state
-    await prisma.rolePermission.deleteMany({
-      where: { roleId: role.id },
-    });
-
-    // Create new mappings
+    await prisma.rolePermission.deleteMany({ where: { roleId: role.id } });
     await prisma.rolePermission.createMany({
       data: rolePermissions.map((permissionId) => ({
         roleId: role.id,
@@ -144,47 +114,61 @@ async function main() {
       })),
     });
   }
-  console.log('Roles and permissions seeded.');
+  console.log("Roles and permissions seeded.");
 
-  // 3. Create Demo Users
-  const passwordHash = await bcrypt.hash('password123', 10);
-
+  // ── 3. Demo Users ──
+  const passwordHash = await bcrypt.hash("password123", 10);
   const demoUsers = [
-    { email: 'admin@transitops.local', name: 'Admin User', roleSlug: 'admin' },
-    { email: 'fleet@transitops.local', name: 'Fleet Manager User', roleSlug: 'fleet_manager' },
-    { email: 'dispatcher@transitops.local', name: 'Dispatcher User', roleSlug: 'dispatcher' },
-    { email: 'safety@transitops.local', name: 'Safety Officer User', roleSlug: 'safety_officer' },
-    { email: 'finance@transitops.local', name: 'Financial Analyst User', roleSlug: 'financial_analyst' },
-    { email: 'driver@transitops.local', name: 'Driver User', roleSlug: 'driver' },
+    {
+      email: "fleet@transitops.local",
+      name: "Vikram Mehta",
+      roleSlug: "fleet_manager",
+    },
+    {
+      email: "driver@transitops.local",
+      name: "Ravi Sharma",
+      roleSlug: "driver",
+    },
+    {
+      email: "safety@transitops.local",
+      name: "Priya Nair",
+      roleSlug: "safety_officer",
+    },
+    {
+      email: "finance@transitops.local",
+      name: "Ankit Deshmukh",
+      roleSlug: "financial_analyst",
+    },
   ];
 
   for (const userDef of demoUsers) {
     const role = await prisma.role.findUniqueOrThrow({
       where: { slug: userDef.roleSlug },
     });
-
     await prisma.user.upsert({
       where: { email: userDef.email },
       update: {
         name: userDef.name,
         roleId: role.id,
-        passwordHash, // Reset password to default
-        status: 'ACTIVE',
+        passwordHash,
+        status: "ACTIVE",
       },
       create: {
         email: userDef.email,
         name: userDef.name,
         roleId: role.id,
         passwordHash,
-        status: 'ACTIVE',
+        status: "ACTIVE",
       },
     });
   }
-  console.log('Demo users seeded.');
+  console.log("Demo users seeded.");
 
+  // ── 4. Operational Data ──
   const now = new Date();
   const day = (offset: number) => new Date(now.getTime() + offset * 86_400_000);
 
+  // Wipe operational tables for clean state
   await prisma.tripEvent.deleteMany();
   await prisma.fuelLog.deleteMany();
   await prisma.expense.deleteMany();
@@ -201,66 +185,1395 @@ async function main() {
   await prisma.driver.deleteMany();
   await prisma.vehicle.deleteMany();
 
-  await prisma.vehicle.createMany({ data: [
-    { registrationNumber: 'MH-12-AB-1234', name: 'Van-05', manufacturer: 'Tata', model: 'Winger', type: 'Van', region: 'West', maxLoadCapacity: 500, odometer: 42000, acquisitionCost: 1450000, acquisitionDate: day(-900), fuelType: 'Diesel', status: 'AVAILABLE', insuranceExpiry: day(180), registrationExpiry: day(300), pollutionExpiry: day(90), fitnessExpiry: day(240), permitExpiry: day(160), notes: 'GPS, AC, first-aid kit' },
-    { registrationNumber: 'MH-12-CD-5678', name: 'Truck-02', manufacturer: 'Ashok Leyland', model: 'Dost', type: 'Truck', region: 'West', maxLoadCapacity: 5000, odometer: 192000, acquisitionCost: 2400000, acquisitionDate: day(-1500), fuelType: 'Diesel', status: 'IN_SHOP', insuranceExpiry: day(120), registrationExpiry: day(240), pollutionExpiry: day(25), fitnessExpiry: day(70), permitExpiry: day(100) },
-    { registrationNumber: 'MH-12-EF-9012', name: 'MiniVan-01', manufacturer: 'Maruti', model: 'Eeco', type: 'Mini Van', region: 'West', maxLoadCapacity: 300, odometer: 64000, acquisitionCost: 760000, acquisitionDate: day(-700), fuelType: 'Petrol', status: 'AVAILABLE', insuranceExpiry: day(45), registrationExpiry: day(220), pollutionExpiry: day(20), fitnessExpiry: day(130), permitExpiry: day(110) },
-    { registrationNumber: 'TS-09-GH-3456', name: 'Truck-09', manufacturer: 'Tata', model: 'Ultra', type: 'Truck', region: 'South', maxLoadCapacity: 7500, odometer: 221000, acquisitionCost: 3200000, acquisitionDate: day(-1800), fuelType: 'Diesel', status: 'ON_TRIP', insuranceExpiry: day(210), registrationExpiry: day(190), pollutionExpiry: day(75), fitnessExpiry: day(120), permitExpiry: day(140) },
-    { registrationNumber: 'KA-01-IJ-7890', name: 'Bus-01', manufacturer: 'Eicher', model: 'Skyline', type: 'Bus', region: 'South', maxLoadCapacity: 2500, odometer: 480000, acquisitionCost: 4200000, acquisitionDate: day(-3200), fuelType: 'Diesel', status: 'RETIRED', insuranceExpiry: day(-30), registrationExpiry: day(-10), pollutionExpiry: day(-45), fitnessExpiry: day(-20), permitExpiry: day(-15) },
-    { registrationNumber: 'DL-01-KL-1122', name: 'Van-03', manufacturer: 'Force', model: 'Traveller', type: 'Van', region: 'North', maxLoadCapacity: 900, odometer: 83000, acquisitionCost: 1800000, acquisitionDate: day(-1100), fuelType: 'Diesel', status: 'AVAILABLE', insuranceExpiry: day(12), registrationExpiry: day(160), pollutionExpiry: day(50), fitnessExpiry: day(90), permitExpiry: day(120) },
-    { registrationNumber: 'GJ-01-MN-3344', name: 'Truck-04', manufacturer: 'Eicher', model: 'Pro', type: 'Truck', region: 'West', maxLoadCapacity: 4200, odometer: 145000, acquisitionCost: 2700000, acquisitionDate: day(-1300), fuelType: 'Diesel', status: 'AVAILABLE', insuranceExpiry: day(250), registrationExpiry: day(310), pollutionExpiry: day(80), fitnessExpiry: day(170), permitExpiry: day(190) },
-  ] });
+  // ── Vehicles (20 — diverse fleet across India) ──
+  await prisma.vehicle.createMany({
+    data: [
+      {
+        registrationNumber: "MH-12-AB-1234",
+        name: "Van-01",
+        manufacturer: "Tata",
+        model: "Winger",
+        type: "Van",
+        region: "West",
+        maxLoadCapacity: 500,
+        odometer: 42000,
+        acquisitionCost: 1450000,
+        acquisitionDate: day(-900),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(180),
+        registrationExpiry: day(300),
+        pollutionExpiry: day(90),
+        fitnessExpiry: day(240),
+        permitExpiry: day(160),
+        notes: "GPS, AC, first-aid kit",
+      },
+      {
+        registrationNumber: "MH-12-CD-5678",
+        name: "Truck-01",
+        manufacturer: "Ashok Leyland",
+        model: "Dost",
+        type: "Truck",
+        region: "West",
+        maxLoadCapacity: 5000,
+        odometer: 192000,
+        acquisitionCost: 2400000,
+        acquisitionDate: day(-1500),
+        fuelType: "Diesel",
+        status: "IN_SHOP",
+        insuranceExpiry: day(120),
+        registrationExpiry: day(240),
+        pollutionExpiry: day(25),
+        fitnessExpiry: day(70),
+        permitExpiry: day(100),
+      },
+      {
+        registrationNumber: "MH-12-EF-9012",
+        name: "MiniVan-01",
+        manufacturer: "Maruti",
+        model: "Eeco",
+        type: "Mini Van",
+        region: "West",
+        maxLoadCapacity: 300,
+        odometer: 64000,
+        acquisitionCost: 760000,
+        acquisitionDate: day(-700),
+        fuelType: "Petrol",
+        status: "AVAILABLE",
+        insuranceExpiry: day(45),
+        registrationExpiry: day(220),
+        pollutionExpiry: day(20),
+        fitnessExpiry: day(130),
+        permitExpiry: day(110),
+      },
+      {
+        registrationNumber: "TS-09-GH-3456",
+        name: "Truck-02",
+        manufacturer: "Tata",
+        model: "Ultra",
+        type: "Truck",
+        region: "South",
+        maxLoadCapacity: 7500,
+        odometer: 221000,
+        acquisitionCost: 3200000,
+        acquisitionDate: day(-1800),
+        fuelType: "Diesel",
+        status: "ON_TRIP",
+        insuranceExpiry: day(210),
+        registrationExpiry: day(190),
+        pollutionExpiry: day(75),
+        fitnessExpiry: day(120),
+        permitExpiry: day(140),
+      },
+      {
+        registrationNumber: "KA-01-IJ-7890",
+        name: "Bus-01",
+        manufacturer: "Eicher",
+        model: "Skyline",
+        type: "Bus",
+        region: "South",
+        maxLoadCapacity: 2500,
+        odometer: 480000,
+        acquisitionCost: 4200000,
+        acquisitionDate: day(-3200),
+        fuelType: "Diesel",
+        status: "RETIRED",
+        insuranceExpiry: day(-30),
+        registrationExpiry: day(-10),
+        pollutionExpiry: day(-45),
+        fitnessExpiry: day(-20),
+        permitExpiry: day(-15),
+      },
+      {
+        registrationNumber: "DL-01-KL-1122",
+        name: "Van-02",
+        manufacturer: "Force",
+        model: "Traveller",
+        type: "Van",
+        region: "North",
+        maxLoadCapacity: 900,
+        odometer: 83000,
+        acquisitionCost: 1800000,
+        acquisitionDate: day(-1100),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(12),
+        registrationExpiry: day(160),
+        pollutionExpiry: day(50),
+        fitnessExpiry: day(90),
+        permitExpiry: day(120),
+      },
+      {
+        registrationNumber: "GJ-01-MN-3344",
+        name: "Truck-03",
+        manufacturer: "Eicher",
+        model: "Pro",
+        type: "Truck",
+        region: "West",
+        maxLoadCapacity: 4200,
+        odometer: 145000,
+        acquisitionCost: 2700000,
+        acquisitionDate: day(-1300),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(250),
+        registrationExpiry: day(310),
+        pollutionExpiry: day(80),
+        fitnessExpiry: day(170),
+        permitExpiry: day(190),
+      },
+      {
+        registrationNumber: "MH-14-OP-5566",
+        name: "Van-03",
+        manufacturer: "Mahindra",
+        model: "Supro",
+        type: "Van",
+        region: "West",
+        maxLoadCapacity: 750,
+        odometer: 51000,
+        acquisitionCost: 1250000,
+        acquisitionDate: day(-800),
+        fuelType: "CNG",
+        status: "AVAILABLE",
+        insuranceExpiry: day(200),
+        registrationExpiry: day(280),
+        pollutionExpiry: day(60),
+        fitnessExpiry: day(150),
+        permitExpiry: day(210),
+      },
+      {
+        registrationNumber: "KA-05-QR-7788",
+        name: "Truck-04",
+        manufacturer: "BharatBenz",
+        model: "1217C",
+        type: "Truck",
+        region: "South",
+        maxLoadCapacity: 6000,
+        odometer: 98000,
+        acquisitionCost: 2950000,
+        acquisitionDate: day(-950),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(320),
+        registrationExpiry: day(340),
+        pollutionExpiry: day(110),
+        fitnessExpiry: day(200),
+        permitExpiry: day(230),
+      },
+      {
+        registrationNumber: "DL-08-ST-9900",
+        name: "MiniVan-02",
+        manufacturer: "Tata",
+        model: "Ace",
+        type: "Mini Van",
+        region: "North",
+        maxLoadCapacity: 400,
+        odometer: 37000,
+        acquisitionCost: 620000,
+        acquisitionDate: day(-500),
+        fuelType: "Petrol",
+        status: "AVAILABLE",
+        insuranceExpiry: day(140),
+        registrationExpiry: day(260),
+        pollutionExpiry: day(35),
+        fitnessExpiry: day(120),
+        permitExpiry: day(180),
+      },
+      {
+        registrationNumber: "TN-01-UV-2233",
+        name: "Van-04",
+        manufacturer: "Force",
+        model: "Urbania",
+        type: "Van",
+        region: "South",
+        maxLoadCapacity: 850,
+        odometer: 68000,
+        acquisitionCost: 1650000,
+        acquisitionDate: day(-1000),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(90),
+        registrationExpiry: day(240),
+        pollutionExpiry: day(45),
+        fitnessExpiry: day(160),
+        permitExpiry: day(130),
+      },
+      {
+        registrationNumber: "GJ-05-WX-4455",
+        name: "Truck-05",
+        manufacturer: "Ashok Leyland",
+        model: "Boss",
+        type: "Truck",
+        region: "West",
+        maxLoadCapacity: 5500,
+        odometer: 176000,
+        acquisitionCost: 2850000,
+        acquisitionDate: day(-1600),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(170),
+        registrationExpiry: day(220),
+        pollutionExpiry: day(28),
+        fitnessExpiry: day(140),
+        permitExpiry: day(165),
+      },
+      {
+        registrationNumber: "RJ-14-AB-6677",
+        name: "Truck-06",
+        manufacturer: "Tata",
+        model: "LPT 1613",
+        type: "Truck",
+        region: "North",
+        maxLoadCapacity: 9000,
+        odometer: 315000,
+        acquisitionCost: 3800000,
+        acquisitionDate: day(-2400),
+        fuelType: "Diesel",
+        status: "ON_TRIP",
+        insuranceExpiry: day(95),
+        registrationExpiry: day(150),
+        pollutionExpiry: day(40),
+        fitnessExpiry: day(85),
+        permitExpiry: day(110),
+      },
+      {
+        registrationNumber: "AP-28-CD-8899",
+        name: "Van-05",
+        manufacturer: "Tata",
+        model: "Winger Deluxe",
+        type: "Van",
+        region: "South",
+        maxLoadCapacity: 600,
+        odometer: 54000,
+        acquisitionCost: 1550000,
+        acquisitionDate: day(-650),
+        fuelType: "Diesel",
+        status: "ON_TRIP",
+        insuranceExpiry: day(275),
+        registrationExpiry: day(350),
+        pollutionExpiry: day(95),
+        fitnessExpiry: day(210),
+        permitExpiry: day(255),
+      },
+      {
+        registrationNumber: "MP-09-EF-1100",
+        name: "Truck-07",
+        manufacturer: "Eicher",
+        model: "Pro 3019",
+        type: "Truck",
+        region: "North",
+        maxLoadCapacity: 12000,
+        odometer: 412000,
+        acquisitionCost: 4100000,
+        acquisitionDate: day(-2800),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(55),
+        registrationExpiry: day(130),
+        pollutionExpiry: day(15),
+        fitnessExpiry: day(60),
+        permitExpiry: day(80),
+      },
+      {
+        registrationNumber: "WB-06-GH-2211",
+        name: "Van-06",
+        manufacturer: "Mahindra",
+        model: "Bolero Pickup",
+        type: "Van",
+        region: "East",
+        maxLoadCapacity: 650,
+        odometer: 78000,
+        acquisitionCost: 980000,
+        acquisitionDate: day(-1150),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(230),
+        registrationExpiry: day(295),
+        pollutionExpiry: day(70),
+        fitnessExpiry: day(180),
+        permitExpiry: day(200),
+      },
+      {
+        registrationNumber: "KL-07-IJ-3322",
+        name: "MiniVan-03",
+        manufacturer: "Maruti",
+        model: "Super Carry",
+        type: "Mini Van",
+        region: "South",
+        maxLoadCapacity: 350,
+        odometer: 29000,
+        acquisitionCost: 580000,
+        acquisitionDate: day(-400),
+        fuelType: "Petrol",
+        status: "AVAILABLE",
+        insuranceExpiry: day(310),
+        registrationExpiry: day(370),
+        pollutionExpiry: day(120),
+        fitnessExpiry: day(250),
+        permitExpiry: day(270),
+      },
+      {
+        registrationNumber: "HR-26-KL-4433",
+        name: "Truck-08",
+        manufacturer: "Ashok Leyland",
+        model: "Ecomet",
+        type: "Truck",
+        region: "North",
+        maxLoadCapacity: 8000,
+        odometer: 267000,
+        acquisitionCost: 3500000,
+        acquisitionDate: day(-2100),
+        fuelType: "Diesel",
+        status: "IN_SHOP",
+        insuranceExpiry: day(80),
+        registrationExpiry: day(175),
+        pollutionExpiry: day(22),
+        fitnessExpiry: day(55),
+        permitExpiry: day(95),
+      },
+      {
+        registrationNumber: "CG-04-MN-5544",
+        name: "Van-07",
+        manufacturer: "Force",
+        model: "Trax Cruiser",
+        type: "Van",
+        region: "East",
+        maxLoadCapacity: 700,
+        odometer: 45000,
+        acquisitionCost: 1100000,
+        acquisitionDate: day(-600),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(190),
+        registrationExpiry: day(265),
+        pollutionExpiry: day(55),
+        fitnessExpiry: day(145),
+        permitExpiry: day(175),
+      },
+      {
+        registrationNumber: "UP-32-OP-6655",
+        name: "Truck-09",
+        manufacturer: "BharatBenz",
+        model: "1623C",
+        type: "Truck",
+        region: "North",
+        maxLoadCapacity: 10000,
+        odometer: 188000,
+        acquisitionCost: 3600000,
+        acquisitionDate: day(-1700),
+        fuelType: "Diesel",
+        status: "AVAILABLE",
+        insuranceExpiry: day(145),
+        registrationExpiry: day(210),
+        pollutionExpiry: day(65),
+        fitnessExpiry: day(115),
+        permitExpiry: day(150),
+      },
+    ],
+  });
 
-  await prisma.driver.createMany({ data: [
-    { name: 'Alex', employeeId: 'EMP-001', licenceNumber: 'DL-1425-2016', licenceCategory: 'LMV', licenceExpiry: day(365), contactNumber: '9876500001', region: 'West', safetyScore: 94, status: 'AVAILABLE', emergencyContact: '9876500101', dateJoined: day(-1200) },
-    { name: 'Raj', employeeId: 'EMP-002', licenceNumber: 'KA-9987-2018', licenceCategory: 'HMV', licenceExpiry: day(-30), contactNumber: '9876500002', region: 'West', safetyScore: 68, status: 'AVAILABLE', emergencyContact: '9876500102', dateJoined: day(-900) },
-    { name: 'Sam', employeeId: 'EMP-003', licenceNumber: 'TS-7731-2017', licenceCategory: 'HMV', licenceExpiry: day(240), contactNumber: '9876500003', region: 'South', safetyScore: 86, status: 'ON_TRIP', emergencyContact: '9876500103', dateJoined: day(-1500) },
-    { name: 'Priya', employeeId: 'EMP-004', licenceNumber: 'MH-3344-2019', licenceCategory: 'LMV', licenceExpiry: day(150), contactNumber: '9876500004', region: 'West', safetyScore: 76, status: 'SUSPENDED', emergencyContact: '9876500104', dateJoined: day(-800) },
-    { name: 'Neha', employeeId: 'EMP-005', licenceNumber: 'TG-7788-2020', licenceCategory: 'LMV', licenceExpiry: day(15), contactNumber: '9876500005', region: 'South', safetyScore: 64, status: 'OFF_DUTY', emergencyContact: '9876500105', dateJoined: day(-600) },
-    { name: 'Suresh', employeeId: 'EMP-006', licenceNumber: 'DL-5546-2017', licenceCategory: 'HMV', licenceExpiry: day(190), contactNumber: '9876500006', region: 'North', safetyScore: 82, status: 'AVAILABLE', emergencyContact: '9876500106', dateJoined: day(-1400) },
-  ] });
+  // ── Drivers (15 — realistic Indian names across regions) ──
+  await prisma.driver.createMany({
+    data: [
+      {
+        name: "Rajesh Kumar",
+        employeeId: "EMP-001",
+        licenceNumber: "DL-1425-2016",
+        licenceCategory: "LMV",
+        licenceExpiry: day(365),
+        contactNumber: "9876500001",
+        region: "West",
+        safetyScore: 94,
+        status: "AVAILABLE",
+        emergencyContact: "9876500101",
+        dateJoined: day(-1200),
+      },
+      {
+        name: "Sunil Patil",
+        employeeId: "EMP-002",
+        licenceNumber: "KA-9987-2018",
+        licenceCategory: "HMV",
+        licenceExpiry: day(-30),
+        contactNumber: "9876500002",
+        region: "West",
+        safetyScore: 68,
+        status: "AVAILABLE",
+        emergencyContact: "9876500102",
+        dateJoined: day(-900),
+      },
+      {
+        name: "Sameer Khan",
+        employeeId: "EMP-003",
+        licenceNumber: "TS-7731-2017",
+        licenceCategory: "HMV",
+        licenceExpiry: day(240),
+        contactNumber: "9876500003",
+        region: "South",
+        safetyScore: 86,
+        status: "ON_TRIP",
+        emergencyContact: "9876500103",
+        dateJoined: day(-1500),
+      },
+      {
+        name: "Priya Singh",
+        employeeId: "EMP-004",
+        licenceNumber: "MH-3344-2019",
+        licenceCategory: "LMV",
+        licenceExpiry: day(150),
+        contactNumber: "9876500004",
+        region: "West",
+        safetyScore: 76,
+        status: "SUSPENDED",
+        emergencyContact: "9876500104",
+        dateJoined: day(-800),
+      },
+      {
+        name: "Neha Gupta",
+        employeeId: "EMP-005",
+        licenceNumber: "TG-7788-2020",
+        licenceCategory: "LMV",
+        licenceExpiry: day(15),
+        contactNumber: "9876500005",
+        region: "South",
+        safetyScore: 64,
+        status: "OFF_DUTY",
+        emergencyContact: "9876500105",
+        dateJoined: day(-600),
+      },
+      {
+        name: "Suresh Yadav",
+        employeeId: "EMP-006",
+        licenceNumber: "DL-5546-2017",
+        licenceCategory: "HMV",
+        licenceExpiry: day(190),
+        contactNumber: "9876500006",
+        region: "North",
+        safetyScore: 82,
+        status: "AVAILABLE",
+        emergencyContact: "9876500106",
+        dateJoined: day(-1400),
+      },
+      {
+        name: "Kiran Joshi",
+        employeeId: "EMP-007",
+        licenceNumber: "MH-2211-2021",
+        licenceCategory: "LMV",
+        licenceExpiry: day(420),
+        contactNumber: "9876500007",
+        region: "West",
+        safetyScore: 90,
+        status: "AVAILABLE",
+        emergencyContact: "9876500107",
+        dateJoined: day(-700),
+      },
+      {
+        name: "Meera Reddy",
+        employeeId: "EMP-008",
+        licenceNumber: "KA-8833-2019",
+        licenceCategory: "HMV",
+        licenceExpiry: day(300),
+        contactNumber: "9876500008",
+        region: "South",
+        safetyScore: 88,
+        status: "AVAILABLE",
+        emergencyContact: "9876500108",
+        dateJoined: day(-1100),
+      },
+      {
+        name: "Arjun Pillai",
+        employeeId: "EMP-009",
+        licenceNumber: "TN-4455-2018",
+        licenceCategory: "HMV",
+        licenceExpiry: day(260),
+        contactNumber: "9876500009",
+        region: "South",
+        safetyScore: 79,
+        status: "AVAILABLE",
+        emergencyContact: "9876500109",
+        dateJoined: day(-1250),
+      },
+      {
+        name: "Divya Chauhan",
+        employeeId: "EMP-010",
+        licenceNumber: "DL-9922-2022",
+        licenceCategory: "LMV",
+        licenceExpiry: day(500),
+        contactNumber: "9876500010",
+        region: "North",
+        safetyScore: 92,
+        status: "OFF_DUTY",
+        emergencyContact: "9876500110",
+        dateJoined: day(-450),
+      },
+      {
+        name: "Manoj Tiwari",
+        employeeId: "EMP-011",
+        licenceNumber: "UP-3344-2017",
+        licenceCategory: "HMV",
+        licenceExpiry: day(180),
+        contactNumber: "9876500011",
+        region: "North",
+        safetyScore: 85,
+        status: "ON_TRIP",
+        emergencyContact: "9876500111",
+        dateJoined: day(-1350),
+      },
+      {
+        name: "Anjali Verma",
+        employeeId: "EMP-012",
+        licenceNumber: "RJ-5566-2020",
+        licenceCategory: "LMV",
+        licenceExpiry: day(340),
+        contactNumber: "9876500012",
+        region: "North",
+        safetyScore: 91,
+        status: "AVAILABLE",
+        emergencyContact: "9876500112",
+        dateJoined: day(-550),
+      },
+      {
+        name: "Deepak Nair",
+        employeeId: "EMP-013",
+        licenceNumber: "KL-7788-2019",
+        licenceCategory: "HMV",
+        licenceExpiry: day(210),
+        contactNumber: "9876500013",
+        region: "South",
+        safetyScore: 77,
+        status: "AVAILABLE",
+        emergencyContact: "9876500113",
+        dateJoined: day(-980),
+      },
+      {
+        name: "Pooja Mishra",
+        employeeId: "EMP-014",
+        licenceNumber: "MP-9900-2021",
+        licenceCategory: "LMV",
+        licenceExpiry: day(400),
+        contactNumber: "9876500014",
+        region: "North",
+        safetyScore: 88,
+        status: "ON_TRIP",
+        emergencyContact: "9876500114",
+        dateJoined: day(-380),
+      },
+      {
+        name: "Harish Bhat",
+        employeeId: "EMP-015",
+        licenceNumber: "WB-1122-2018",
+        licenceCategory: "HMV",
+        licenceExpiry: day(270),
+        contactNumber: "9876500015",
+        region: "East",
+        safetyScore: 73,
+        status: "AVAILABLE",
+        emergencyContact: "9876500115",
+        dateJoined: day(-1050),
+      },
+    ],
+  });
 
-  const vehicles = Object.fromEntries((await prisma.vehicle.findMany()).map((v) => [v.name, v]));
-  const drivers = Object.fromEntries((await prisma.driver.findMany()).map((d) => [d.name, d]));
-  await prisma.trip.createMany({ data: [
-    { tripNumber: 'TRP-1024', source: 'Delhi', destination: 'Jaipur', sourceLat: 28.6139, sourceLng: 77.209, destinationLat: 26.9124, destinationLng: 75.7873, plannedStart: day(2), plannedCompletion: day(3), vehicleId: vehicles['Van-03'].id, driverId: drivers['Suresh'].id, cargoDescription: 'Medical supplies', cargoWeight: 600, plannedDistance: 280, estimatedDuration: 330, expectedRevenue: 36500, estimatedFuelCost: 9100, estimatedTollCost: 1200, estimatedMaintenanceReserve: 1400, estimatedMargin: 24800, status: 'DRAFT' },
-    { tripNumber: 'TRP-1025', source: 'Hyderabad', destination: 'Vijayawada', sourceLat: 17.385, sourceLng: 78.4867, destinationLat: 16.5062, destinationLng: 80.648, plannedStart: day(-1), plannedCompletion: day(1), vehicleId: vehicles['Truck-09'].id, driverId: drivers['Sam'].id, cargoDescription: 'Industrial goods', cargoWeight: 4200, plannedDistance: 275, estimatedDuration: 340, startingOdometer: 221000, expectedRevenue: 58000, estimatedFuelCost: 14800, estimatedTollCost: 2100, estimatedMaintenanceReserve: 2600, estimatedMargin: 38500, actualStart: day(-1), status: 'DISPATCHED' },
-    { tripNumber: 'TRP-1023', source: 'Bengaluru', destination: 'Mysuru', sourceLat: 12.9716, sourceLng: 77.5946, destinationLat: 12.2958, destinationLng: 76.6394, plannedStart: day(-8), plannedCompletion: day(-7), vehicleId: vehicles['Van-05'].id, driverId: drivers['Alex'].id, cargoDescription: 'Retail stock', cargoWeight: 350, plannedDistance: 145, estimatedDuration: 190, startingOdometer: 41800, finalOdometer: 41948, expectedRevenue: 21000, estimatedFuelCost: 4200, estimatedTollCost: 600, estimatedMaintenanceReserve: 740, estimatedMargin: 15460, actualFuelConsumed: 23, actualFuelCost: 2420, actualStart: day(-8), actualCompletion: day(-7), status: 'COMPLETED' },
-    { tripNumber: 'TRP-1022', source: 'Mumbai', destination: 'Surat', sourceLat: 19.076, sourceLng: 72.8777, destinationLat: 21.1702, destinationLng: 72.8311, plannedStart: day(-4), plannedCompletion: day(-3), cargoDescription: 'Textiles', cargoWeight: 900, plannedDistance: 285, estimatedDuration: 360, expectedRevenue: 30000, cancellationReason: 'Customer rescheduled', status: 'CANCELLED' },
-  ] });
+  const vehicles = Object.fromEntries(
+    (await prisma.vehicle.findMany()).map((v) => [v.name, v])
+  );
+  const drivers = Object.fromEntries(
+    (await prisma.driver.findMany()).map((d) => [d.name, d])
+  );
 
-  await prisma.maintenanceLog.createMany({ data: [
-    { vehicleId: vehicles['Truck-02'].id, serviceType: 'Engine repair', description: 'Injector and cooling system service', scheduledDate: day(-2), startedDate: day(-1), odometer: 192000, vendor: 'Metro Fleet Care', technician: 'Ravi Kumar', estimatedCost: 18000, priority: 'HIGH', status: 'IN_PROGRESS' },
-    { vehicleId: vehicles['Van-03'].id, serviceType: 'Scheduled service', description: 'Oil and filter change', scheduledDate: day(5), odometer: 83000, vendor: 'North Hub Workshop', estimatedCost: 5200, priority: 'MEDIUM', status: 'SCHEDULED' },
-    { vehicleId: vehicles['Truck-04'].id, serviceType: 'Tyre replacement', description: 'Rear axle tyres', scheduledDate: day(-20), startedDate: day(-20), completedDate: day(-19), odometer: 144500, vendor: 'Highway Tyres', technician: 'Amit', estimatedCost: 32000, actualCost: 30800, priority: 'MEDIUM', status: 'COMPLETED' },
-  ] });
+  // ── Active / Draft / Dispatched Trips ──
+  await prisma.trip.createMany({
+    data: [
+      {
+        tripNumber: "TRP-2001",
+        source: "Delhi",
+        destination: "Jaipur",
+        sourceLat: 28.6139,
+        sourceLng: 77.209,
+        destinationLat: 26.9124,
+        destinationLng: 75.7873,
+        plannedStart: day(2),
+        plannedCompletion: day(3),
+        vehicleId: vehicles["Van-02"].id,
+        driverId: drivers["Suresh Yadav"].id,
+        cargoDescription: "Medical supplies — insulin, PPE",
+        cargoWeight: 600,
+        plannedDistance: 280,
+        estimatedDuration: 330,
+        expectedRevenue: 36500,
+        estimatedFuelCost: 9100,
+        estimatedTollCost: 1200,
+        estimatedMaintenanceReserve: 1400,
+        estimatedMargin: 24800,
+        status: "DRAFT",
+      },
+      {
+        tripNumber: "TRP-2002",
+        source: "Hyderabad",
+        destination: "Vijayawada",
+        sourceLat: 17.385,
+        sourceLng: 78.4867,
+        destinationLat: 16.5062,
+        destinationLng: 80.648,
+        plannedStart: day(-1),
+        plannedCompletion: day(1),
+        vehicleId: vehicles["Truck-02"].id,
+        driverId: drivers["Sameer Khan"].id,
+        cargoDescription: "Industrial machinery parts",
+        cargoWeight: 4200,
+        plannedDistance: 275,
+        estimatedDuration: 340,
+        startingOdometer: 221000,
+        expectedRevenue: 58000,
+        estimatedFuelCost: 14800,
+        estimatedTollCost: 2100,
+        estimatedMaintenanceReserve: 2600,
+        estimatedMargin: 38500,
+        actualStart: day(-1),
+        status: "DISPATCHED",
+      },
+      {
+        tripNumber: "TRP-2003",
+        source: "Lucknow",
+        destination: "Varanasi",
+        sourceLat: 26.8467,
+        sourceLng: 80.9462,
+        destinationLat: 25.3176,
+        destinationLng: 82.9739,
+        plannedStart: day(0),
+        plannedCompletion: day(1),
+        vehicleId: vehicles["Truck-06"].id,
+        driverId: drivers["Manoj Tiwari"].id,
+        cargoDescription: "FMCG goods — Hindustan Unilever",
+        cargoWeight: 7500,
+        plannedDistance: 320,
+        estimatedDuration: 400,
+        startingOdometer: 315000,
+        expectedRevenue: 72000,
+        estimatedFuelCost: 17200,
+        estimatedTollCost: 2800,
+        estimatedMaintenanceReserve: 3200,
+        estimatedMargin: 48800,
+        actualStart: day(0),
+        status: "DISPATCHED",
+      },
+      {
+        tripNumber: "TRP-2004",
+        source: "Chennai",
+        destination: "Coimbatore",
+        sourceLat: 13.0827,
+        sourceLng: 80.2707,
+        destinationLat: 11.0168,
+        destinationLng: 76.9558,
+        plannedStart: day(0),
+        plannedCompletion: day(1),
+        vehicleId: vehicles["Van-05"].id,
+        driverId: drivers["Pooja Mishra"].id,
+        cargoDescription: "Electronics — Samsung displays",
+        cargoWeight: 450,
+        plannedDistance: 505,
+        estimatedDuration: 550,
+        startingOdometer: 54000,
+        expectedRevenue: 48000,
+        estimatedFuelCost: 12500,
+        estimatedTollCost: 3200,
+        estimatedMaintenanceReserve: 2400,
+        estimatedMargin: 29900,
+        actualStart: day(0),
+        status: "DISPATCHED",
+      },
+      {
+        tripNumber: "TRP-2005",
+        source: "Ahmedabad",
+        destination: "Udaipur",
+        sourceLat: 23.0225,
+        sourceLng: 72.5714,
+        destinationLat: 24.5854,
+        destinationLng: 73.7125,
+        plannedStart: day(3),
+        plannedCompletion: day(4),
+        vehicleId: vehicles["Truck-03"].id,
+        driverId: drivers["Rajesh Kumar"].id,
+        cargoDescription: "Ceramic tiles — Kajaria batch",
+        cargoWeight: 3800,
+        plannedDistance: 260,
+        estimatedDuration: 310,
+        expectedRevenue: 42000,
+        estimatedFuelCost: 11500,
+        estimatedTollCost: 1800,
+        estimatedMaintenanceReserve: 2100,
+        estimatedMargin: 26600,
+        status: "DRAFT",
+      },
+      {
+        tripNumber: "TRP-2006",
+        source: "Kolkata",
+        destination: "Bhubaneswar",
+        sourceLat: 22.5726,
+        sourceLng: 88.3639,
+        destinationLat: 20.2961,
+        destinationLng: 85.8245,
+        plannedStart: day(1),
+        plannedCompletion: day(2),
+        vehicleId: vehicles["Van-06"].id,
+        driverId: drivers["Harish Bhat"].id,
+        cargoDescription: "Jute products — export consignment",
+        cargoWeight: 580,
+        plannedDistance: 470,
+        estimatedDuration: 520,
+        expectedRevenue: 38000,
+        estimatedFuelCost: 10200,
+        estimatedTollCost: 2600,
+        estimatedMaintenanceReserve: 2000,
+        estimatedMargin: 23200,
+        status: "DRAFT",
+      },
+      {
+        tripNumber: "TRP-2007",
+        source: "Pune",
+        destination: "Nashik",
+        sourceLat: 18.5204,
+        sourceLng: 73.8567,
+        destinationLat: 20.0063,
+        destinationLng: 73.7906,
+        plannedStart: day(-2),
+        plannedCompletion: day(-1),
+        cargoDescription: "Wine barrels — Sula Vineyards",
+        cargoWeight: 1200,
+        plannedDistance: 210,
+        estimatedDuration: 260,
+        expectedRevenue: 28000,
+        cancellationReason: "Vehicle breakdown en route",
+        status: "CANCELLED",
+      },
+    ],
+  });
 
-  const completedTrip = await prisma.trip.findUniqueOrThrow({ where: { tripNumber: 'TRP-1023' } });
-  await prisma.fuelLog.createMany({ data: [
-    { vehicleId: vehicles['Van-05'].id, tripId: completedTrip.id, date: day(-7), litres: 23, cost: 2420, odometer: 41948, fuelStation: 'Bharat Petroleum', enteredById: drivers['Alex'].id },
-    { vehicleId: vehicles['Truck-04'].id, date: day(-3), litres: 82, cost: 8610, odometer: 145000, fuelStation: 'Indian Oil' },
-  ] });
-  await prisma.expense.createMany({ data: [
-    { vehicleId: vehicles['Van-05'].id, tripId: completedTrip.id, category: 'Toll', amount: 620, date: day(-7), description: 'Bengaluru-Mysuru tolls', status: 'APPROVED', approvedAt: day(-6) },
-    { vehicleId: vehicles['Truck-02'].id, category: 'Repair', amount: 18000, date: day(-1), description: 'Engine repair estimate', status: 'PENDING' },
-    { vehicleId: vehicles['Bus-01'].id, category: 'Fine', amount: 2500, date: day(-30), description: 'Legacy parking fine', status: 'REJECTED' },
-  ] });
+  // ── Completed Trip History (45 trips over ~6 weeks) ──
+  const historyRoutes: [
+    string,
+    string,
+    [number, number],
+    [number, number],
+    number,
+  ][] = [
+    ["Mumbai", "Pune", [19.076, 72.8777], [18.5204, 73.8567], 148],
+    ["Pune", "Mumbai", [18.5204, 73.8567], [19.076, 72.8777], 149],
+    ["Delhi", "Jaipur", [28.6139, 77.209], [26.9124, 75.7873], 280],
+    ["Bengaluru", "Mysuru", [12.9716, 77.5946], [12.2958, 76.6394], 145],
+    ["Hyderabad", "Vijayawada", [17.385, 78.4867], [16.5062, 80.648], 275],
+    ["Mumbai", "Surat", [19.076, 72.8777], [21.1702, 72.8311], 285],
+    ["Ahmedabad", "Surat", [23.0225, 72.5714], [21.1702, 72.8311], 265],
+    ["Chennai", "Bengaluru", [13.0827, 80.2707], [12.9716, 77.5946], 350],
+    ["Delhi", "Chandigarh", [28.6139, 77.209], [30.7333, 76.7794], 250],
+    ["Jaipur", "Udaipur", [26.9124, 75.7873], [24.5854, 73.7125], 395],
+    ["Pune", "Nashik", [18.5204, 73.8567], [20.0063, 73.7906], 210],
+    ["Bengaluru", "Coimbatore", [12.9716, 77.5946], [11.0168, 76.9558], 365],
+    ["Kolkata", "Bhubaneswar", [22.5726, 88.3639], [20.2961, 85.8245], 470],
+    ["Lucknow", "Kanpur", [26.8467, 80.9462], [26.4499, 80.3319], 82],
+    ["Indore", "Bhopal", [22.7196, 75.8577], [23.2599, 77.4126], 195],
+  ];
+  const fleetPool = [
+    "Van-01",
+    "Truck-03",
+    "Van-02",
+    "Van-03",
+    "Truck-04",
+    "MiniVan-02",
+    "Van-04",
+    "Truck-05",
+    "Truck-06",
+    "Van-05",
+    "Van-06",
+    "Truck-07",
+    "Truck-09",
+  ];
+  const driverPool = [
+    "Rajesh Kumar",
+    "Sameer Khan",
+    "Suresh Yadav",
+    "Kiran Joshi",
+    "Meera Reddy",
+    "Arjun Pillai",
+    "Divya Chauhan",
+    "Manoj Tiwari",
+    "Anjali Verma",
+    "Deepak Nair",
+    "Harish Bhat",
+  ];
+  const cargoTypes = [
+    "Retail stock",
+    "FMCG cartons",
+    "Electronics",
+    "Textiles",
+    "Auto parts",
+    "Pharma supplies",
+    "Building materials",
+    "Food grains",
+    "Chemical drums",
+    "Garments",
+  ];
+  const historyTrips: Prisma.TripCreateManyInput[] = [];
 
-  await prisma.complianceAlert.createMany({ data: [
-    { severity: 'CRITICAL', entityType: 'Driver', entityId: drivers['Raj'].id, message: 'Raj cannot be assigned because his licence has expired.', dueDate: drivers['Raj'].licenceExpiry },
-    { severity: 'WARNING', entityType: 'Driver', entityId: drivers['Neha'].id, message: 'Neha\'s licence expires within 30 days.', dueDate: drivers['Neha'].licenceExpiry },
-    { severity: 'WARNING', entityType: 'Vehicle', entityId: vehicles['Van-03'].id, message: 'Van-03 insurance expires within 30 days.', dueDate: vehicles['Van-03'].insuranceExpiry },
-  ] });
-  await prisma.routeCache.createMany({ data: [
-    { source: 'Mumbai', destination: 'Pune', distanceKm: 148, durationMinutes: 190, polylineJson: JSON.stringify([[19.076,72.8777],[18.75,73.2],[18.5204,73.8567]]), isFallback: true },
-    { source: 'Delhi', destination: 'Jaipur', distanceKm: 280, durationMinutes: 330, polylineJson: JSON.stringify([[28.6139,77.209],[27.7,76.6],[26.9124,75.7873]]), isFallback: true },
-  ] });
-  await prisma.emailOutbox.create({ data: { recipient: 'safety@transitops.local', subject: 'TransitOps compliance reminders', body: 'Raj: licence expired. Neha: licence expires soon.', status: 'SENT', sentAt: now } });
-  await prisma.auditLog.createMany({ data: [
-    { action: 'SEED', entityType: 'System', details: 'Deterministic TransitOps demo data generated.' },
-    { action: 'DISPATCH', entityType: 'Trip', entityId: (await prisma.trip.findUniqueOrThrow({ where: { tripNumber: 'TRP-1025' } })).id, details: 'Truck-09 and Sam assigned atomically.' },
-  ] });
-  console.log('Operational demo data seeded.');
+  for (let i = 0; i < 45; i++) {
+    const r = historyRoutes[i % historyRoutes.length];
+    const vehicle = vehicles[fleetPool[i % fleetPool.length]];
+    const driver = drivers[driverPool[i % driverPool.length]];
+    const daysAgo = 42 - i + (i % 3);
+    const isTruck = vehicle.type.includes("Truck");
+    const revenue = Math.round(r[4] * (isTruck ? 210 : 145) + (i % 5) * 900);
+    const fuelCost = Math.round((r[4] / (isTruck ? 6 : 12)) * 105);
+    const tollCost = Math.round(r[4] * 4);
+    const reserve = Math.round(r[4] * 9);
+    const late = i % 6 === 0;
+    historyTrips.push({
+      tripNumber: `TRP-0${900 + i}`,
+      source: r[0],
+      destination: r[1],
+      sourceLat: r[2][0],
+      sourceLng: r[2][1],
+      destinationLat: r[3][0],
+      destinationLng: r[3][1],
+      plannedStart: day(-daysAgo),
+      plannedCompletion: day(-daysAgo + 1),
+      vehicleId: vehicle.id,
+      driverId: driver.id,
+      cargoDescription: cargoTypes[i % cargoTypes.length],
+      cargoWeight: Math.round(vehicle.maxLoadCapacity * (0.55 + (i % 4) * 0.1)),
+      plannedDistance: r[4],
+      estimatedDuration: Math.round((r[4] / 48) * 60),
+      startingOdometer: vehicle.odometer - r[4] * 2,
+      finalOdometer: vehicle.odometer - r[4],
+      expectedRevenue: revenue,
+      estimatedFuelCost: fuelCost,
+      estimatedTollCost: tollCost,
+      estimatedMaintenanceReserve: reserve,
+      estimatedMargin: revenue - fuelCost - tollCost - reserve,
+      actualFuelConsumed: Math.round(r[4] / (isTruck ? 6 : 12)),
+      actualFuelCost: fuelCost,
+      actualStart: day(-daysAgo),
+      actualCompletion: late ? day(-daysAgo + 1.2) : day(-daysAgo + 0.9),
+      status: "COMPLETED",
+    });
+  }
+  await prisma.trip.createMany({ data: historyTrips });
+
+  // ── Fuel Logs (one per completed trip + a few standalone) ──
+  const seededHistory = await prisma.trip.findMany({
+    where: { tripNumber: { startsWith: "TRP-0" } },
+  });
+  const fuelStations = [
+    "Indian Oil",
+    "Bharat Petroleum",
+    "HP",
+    "Shell India",
+    "Reliance BP",
+    "Nayara Energy",
+    "Essar Oil",
+  ];
+  await prisma.fuelLog.createMany({
+    data: seededHistory.map((t, i) => ({
+      vehicleId: t.vehicleId!,
+      tripId: t.id,
+      date: t.actualCompletion!,
+      litres: t.actualFuelConsumed || 20,
+      cost: t.actualFuelCost || 2000,
+      odometer: t.finalOdometer || 0,
+      fuelStation: fuelStations[i % fuelStations.length],
+    })),
+  });
+
+  // Standalone fuel logs (not trip-linked)
+  await prisma.fuelLog.createMany({
+    data: [
+      {
+        vehicleId: vehicles["Truck-01"].id,
+        date: day(-3),
+        litres: 82,
+        cost: 8610,
+        odometer: 192000,
+        fuelStation: "Indian Oil",
+      },
+      {
+        vehicleId: vehicles["Van-01"].id,
+        date: day(-5),
+        litres: 35,
+        cost: 3675,
+        odometer: 42000,
+        fuelStation: "HP",
+      },
+      {
+        vehicleId: vehicles["Truck-07"].id,
+        date: day(-7),
+        litres: 95,
+        cost: 9975,
+        odometer: 412000,
+        fuelStation: "Bharat Petroleum",
+      },
+      {
+        vehicleId: vehicles["Van-06"].id,
+        date: day(-2),
+        litres: 28,
+        cost: 2940,
+        odometer: 78000,
+        fuelStation: "Shell India",
+      },
+      {
+        vehicleId: vehicles["Truck-09"].id,
+        date: day(-4),
+        litres: 110,
+        cost: 11550,
+        odometer: 188000,
+        fuelStation: "Reliance BP",
+      },
+    ],
+  });
+
+  // ── Expenses ──
+  const expenseCategories = [
+    "Toll",
+    "Parking",
+    "Driver Allowance",
+    "Loading/Unloading",
+    "Miscellaneous",
+    "Fine",
+    "Repair",
+    "Weigh Bridge",
+  ];
+  await prisma.expense.createMany({
+    data: seededHistory.map((t, i) => ({
+      vehicleId: t.vehicleId,
+      tripId: t.id,
+      category: expenseCategories[i % expenseCategories.length],
+      amount: 300 + (i % 7) * 260,
+      date: t.actualCompletion!,
+      description: `${expenseCategories[i % expenseCategories.length]} — ${t.source} to ${t.destination}`,
+      status: i % 9 === 0 ? "PENDING" : i % 11 === 0 ? "REJECTED" : "APPROVED",
+      approvedAt: i % 9 === 0 ? null : t.actualCompletion,
+    })),
+  });
+
+  // Extra standalone expenses
+  await prisma.expense.createMany({
+    data: [
+      {
+        vehicleId: vehicles["Truck-01"].id,
+        category: "Repair",
+        amount: 18000,
+        date: day(-1),
+        description: "Engine repair — injector replacement",
+        status: "PENDING",
+      },
+      {
+        vehicleId: vehicles["Bus-01"].id,
+        category: "Fine",
+        amount: 2500,
+        date: day(-30),
+        description: "Overloading challan — NH48",
+        status: "REJECTED",
+      },
+      {
+        vehicleId: vehicles["Truck-08"].id,
+        category: "Repair",
+        amount: 12500,
+        date: day(-3),
+        description: "Brake drum replacement",
+        status: "APPROVED",
+        approvedAt: day(-2),
+      },
+      {
+        vehicleId: vehicles["Van-03"].id,
+        category: "Miscellaneous",
+        amount: 1800,
+        date: day(-6),
+        description: "Emergency tyre puncture repair",
+        status: "APPROVED",
+        approvedAt: day(-5),
+      },
+      {
+        vehicleId: vehicles["Truck-04"].id,
+        category: "Toll",
+        amount: 3400,
+        date: day(-4),
+        description: "Return trip toll — Bengaluru express",
+        status: "APPROVED",
+        approvedAt: day(-3),
+      },
+    ],
+  });
+
+  // ── Maintenance Logs (diverse, realistic) ──
+  await prisma.maintenanceLog.createMany({
+    data: [
+      {
+        vehicleId: vehicles["Truck-01"].id,
+        serviceType: "Engine repair",
+        description: "Injector and cooling system service — overheating issue",
+        scheduledDate: day(-2),
+        startedDate: day(-1),
+        odometer: 192000,
+        vendor: "Metro Fleet Care, Pune",
+        technician: "Ravi Kumar",
+        estimatedCost: 18000,
+        priority: "HIGH",
+        status: "IN_PROGRESS",
+      },
+      {
+        vehicleId: vehicles["Van-02"].id,
+        serviceType: "Scheduled service",
+        description: "80,000 km service — oil, filters, brake inspection",
+        scheduledDate: day(5),
+        odometer: 83000,
+        vendor: "North Hub Workshop, Delhi",
+        estimatedCost: 5200,
+        priority: "MEDIUM",
+        status: "SCHEDULED",
+      },
+      {
+        vehicleId: vehicles["Truck-03"].id,
+        serviceType: "Tyre replacement",
+        description: "Rear axle tyres — Bridgestone",
+        scheduledDate: day(-20),
+        startedDate: day(-20),
+        completedDate: day(-19),
+        odometer: 144500,
+        vendor: "Highway Tyres, Ahmedabad",
+        technician: "Amit Shah",
+        estimatedCost: 32000,
+        actualCost: 30800,
+        priority: "MEDIUM",
+        status: "COMPLETED",
+      },
+      {
+        vehicleId: vehicles["Van-03"].id,
+        serviceType: "Scheduled service",
+        description: "50k km service — oil, filters, brake pads",
+        scheduledDate: day(-40),
+        startedDate: day(-40),
+        completedDate: day(-39),
+        odometer: 50000,
+        vendor: "West Depot Workshop, Pune",
+        technician: "Sanjay Pawar",
+        estimatedCost: 8200,
+        actualCost: 7950,
+        priority: "MEDIUM",
+        status: "COMPLETED",
+      },
+      {
+        vehicleId: vehicles["Truck-04"].id,
+        serviceType: "Brake overhaul",
+        description: "Full air-brake inspection and lining replacement",
+        scheduledDate: day(-25),
+        startedDate: day(-25),
+        completedDate: day(-23),
+        odometer: 96500,
+        vendor: "Southern Fleet Care, Bengaluru",
+        technician: "Ravi Kumar",
+        estimatedCost: 21000,
+        actualCost: 22400,
+        priority: "HIGH",
+        status: "COMPLETED",
+      },
+      {
+        vehicleId: vehicles["Van-04"].id,
+        serviceType: "AC service",
+        description: "Cabin AC gas refill and filter clean",
+        scheduledDate: day(-12),
+        startedDate: day(-12),
+        completedDate: day(-12),
+        odometer: 67200,
+        vendor: "Chennai Auto Hub",
+        estimatedCost: 3600,
+        actualCost: 3400,
+        priority: "LOW",
+        status: "COMPLETED",
+      },
+      {
+        vehicleId: vehicles["Truck-05"].id,
+        serviceType: "Tyre rotation",
+        description: "Rotate and balance all axles",
+        scheduledDate: day(8),
+        odometer: 176000,
+        vendor: "Highway Tyres, Rajkot",
+        estimatedCost: 5200,
+        priority: "MEDIUM",
+        status: "SCHEDULED",
+      },
+      {
+        vehicleId: vehicles["MiniVan-02"].id,
+        serviceType: "Scheduled service",
+        description: "40k km service — battery and belt check",
+        scheduledDate: day(12),
+        odometer: 37000,
+        vendor: "North Hub Workshop, Delhi",
+        estimatedCost: 4800,
+        priority: "LOW",
+        status: "SCHEDULED",
+      },
+      {
+        vehicleId: vehicles["Truck-08"].id,
+        serviceType: "Suspension repair",
+        description: "Leaf spring replacement — rear axle",
+        scheduledDate: day(-5),
+        startedDate: day(-4),
+        odometer: 267000,
+        vendor: "Haryana Motors, Gurugram",
+        technician: "Vikash Malik",
+        estimatedCost: 15000,
+        priority: "HIGH",
+        status: "IN_PROGRESS",
+      },
+      {
+        vehicleId: vehicles["MiniVan-01"].id,
+        serviceType: "Clutch replacement",
+        description: "Full clutch assembly — slipping observed",
+        scheduledDate: day(-35),
+        startedDate: day(-35),
+        completedDate: day(-34),
+        odometer: 63200,
+        vendor: "Maruti Authorized, Pune",
+        technician: "Ganesh More",
+        estimatedCost: 9500,
+        actualCost: 9200,
+        priority: "MEDIUM",
+        status: "COMPLETED",
+      },
+      {
+        vehicleId: vehicles["Truck-07"].id,
+        serviceType: "Transmission service",
+        description: "Gearbox oil flush and filter",
+        scheduledDate: day(15),
+        odometer: 412000,
+        vendor: "Central Auto Works, Indore",
+        estimatedCost: 7800,
+        priority: "MEDIUM",
+        status: "SCHEDULED",
+      },
+      {
+        vehicleId: vehicles["Van-07"].id,
+        serviceType: "Battery replacement",
+        description: "Amaron 12V 65AH — old battery dead",
+        scheduledDate: day(-8),
+        startedDate: day(-8),
+        completedDate: day(-8),
+        odometer: 44500,
+        vendor: "Raipur Battery House",
+        technician: "Mohan Das",
+        estimatedCost: 5500,
+        actualCost: 5200,
+        priority: "LOW",
+        status: "COMPLETED",
+      },
+    ],
+  });
+
+  // ── Compliance Alerts ──
+  await prisma.complianceAlert.createMany({
+    data: [
+      {
+        severity: "CRITICAL",
+        entityType: "Driver",
+        entityId: drivers["Sunil Patil"].id,
+        message:
+          "Sunil Patil cannot be assigned — licence expired 30 days ago.",
+        dueDate: drivers["Sunil Patil"].licenceExpiry,
+      },
+      {
+        severity: "WARNING",
+        entityType: "Driver",
+        entityId: drivers["Neha Gupta"].id,
+        message:
+          "Neha Gupta's licence expires within 15 days — renewal required.",
+        dueDate: drivers["Neha Gupta"].licenceExpiry,
+      },
+      {
+        severity: "WARNING",
+        entityType: "Vehicle",
+        entityId: vehicles["Van-02"].id,
+        message: "Van-02 insurance expires in 12 days — contact ICICI Lombard.",
+        dueDate: vehicles["Van-02"].insuranceExpiry,
+      },
+      {
+        severity: "CRITICAL",
+        entityType: "Vehicle",
+        entityId: vehicles["Truck-07"].id,
+        message: "Truck-07 pollution certificate expires in 15 days.",
+        dueDate: vehicles["Truck-07"].pollutionExpiry,
+      },
+      {
+        severity: "WARNING",
+        entityType: "Vehicle",
+        entityId: vehicles["MiniVan-01"].id,
+        message: "MiniVan-01 pollution certificate expiring in 20 days.",
+        dueDate: vehicles["MiniVan-01"].pollutionExpiry,
+      },
+    ],
+  });
+
+  // ── Notifications ──
+  await prisma.notification.createMany({
+    data: [
+      {
+        title: "Compliance scan complete",
+        message: "5 open alerts need attention — 2 critical, 3 warnings.",
+        createdAt: day(-1),
+      },
+      {
+        title: "Trip completed",
+        message:
+          "TRP-0900 Mumbai → Pune completed on time. Driver: Rajesh Kumar.",
+        createdAt: day(-2),
+      },
+      {
+        title: "Maintenance due",
+        message: "Truck-05 tyre rotation scheduled in 8 days.",
+        createdAt: day(-2),
+      },
+      {
+        title: "New trip assigned",
+        message: "TRP-2003 Lucknow → Varanasi dispatched with Truck-06.",
+        createdAt: day(0),
+      },
+      {
+        title: "Expense pending",
+        message:
+          "Engine repair expense ₹18,000 for Truck-01 awaiting approval.",
+        createdAt: day(-1),
+      },
+      {
+        title: "Driver alert",
+        message:
+          "Sunil Patil licence expired. Remove from active dispatch pool.",
+        createdAt: day(-3),
+      },
+    ],
+  });
+
+  // ── Route Cache (pre-calculated routes for fast lookup) ──
+  await prisma.routeCache.createMany({
+    data: [
+      {
+        source: "Mumbai",
+        destination: "Pune",
+        distanceKm: 148,
+        durationMinutes: 190,
+        polylineJson: JSON.stringify([
+          [19.076, 72.8777],
+          [18.92, 73.05],
+          [18.75, 73.2],
+          [18.5204, 73.8567],
+        ]),
+        isFallback: true,
+      },
+      {
+        source: "Delhi",
+        destination: "Jaipur",
+        distanceKm: 280,
+        durationMinutes: 330,
+        polylineJson: JSON.stringify([
+          [28.6139, 77.209],
+          [27.8, 76.8],
+          [27.2, 76.2],
+          [26.9124, 75.7873],
+        ]),
+        isFallback: true,
+      },
+      {
+        source: "Hyderabad",
+        destination: "Vijayawada",
+        distanceKm: 275,
+        durationMinutes: 340,
+        polylineJson: JSON.stringify([
+          [17.385, 78.4867],
+          [17.0, 79.2],
+          [16.7, 79.9],
+          [16.5062, 80.648],
+        ]),
+        isFallback: true,
+      },
+      {
+        source: "Chennai",
+        destination: "Bengaluru",
+        distanceKm: 350,
+        durationMinutes: 380,
+        polylineJson: JSON.stringify([
+          [13.0827, 80.2707],
+          [12.8, 79.5],
+          [12.9, 78.5],
+          [12.9716, 77.5946],
+        ]),
+        isFallback: true,
+      },
+      {
+        source: "Kolkata",
+        destination: "Bhubaneswar",
+        distanceKm: 470,
+        durationMinutes: 520,
+        polylineJson: JSON.stringify([
+          [22.5726, 88.3639],
+          [21.8, 87.5],
+          [21.0, 86.5],
+          [20.2961, 85.8245],
+        ]),
+        isFallback: true,
+      },
+    ],
+  });
+
+  // ── Email Outbox ──
+  await prisma.emailOutbox.create({
+    data: {
+      recipient: "safety@transitops.local",
+      subject: "TransitOps Weekly Compliance Report",
+      body: "Summary: Sunil Patil licence expired. Neha Gupta licence expiring. Van-02 insurance due. Truck-07 PUC due. MiniVan-01 PUC due.",
+      status: "SENT",
+      sentAt: now,
+    },
+  });
+
+  // ── Audit Log ──
+  await prisma.auditLog.createMany({
+    data: [
+      {
+        action: "SEED",
+        entityType: "System",
+        details: "Full deterministic TransitOps demo data v2 seeded.",
+      },
+      {
+        action: "DISPATCH",
+        entityType: "Trip",
+        entityId: (
+          await prisma.trip.findUniqueOrThrow({
+            where: { tripNumber: "TRP-2002" },
+          })
+        ).id,
+        details: "Truck-02 and Sameer Khan assigned atomically.",
+      },
+      {
+        action: "DISPATCH",
+        entityType: "Trip",
+        entityId: (
+          await prisma.trip.findUniqueOrThrow({
+            where: { tripNumber: "TRP-2003" },
+          })
+        ).id,
+        details: "Truck-06 and Manoj Tiwari dispatched for Lucknow-Varanasi.",
+      },
+      {
+        action: "DISPATCH",
+        entityType: "Trip",
+        entityId: (
+          await prisma.trip.findUniqueOrThrow({
+            where: { tripNumber: "TRP-2004" },
+          })
+        ).id,
+        details: "Van-05 and Pooja Mishra dispatched for Chennai-Coimbatore.",
+      },
+    ],
+  });
+
+  console.log(
+    "Full operational demo data seeded — 20 vehicles, 15 drivers, 52 trips, maintenance, fuel, expenses."
+  );
 }
 
 main()

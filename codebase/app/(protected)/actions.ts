@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { driverInput, vehicleInput } from "@/lib/fleet";
 import { dispatchProblems } from "@/lib/dispatch";
-import { fallbackRoute } from "@/lib/routes";
+import { resolveRoute } from "@/lib/routes";
 
 const future = (days: number) => new Date(Date.now() + days * 86_400_000);
 
@@ -141,7 +141,7 @@ export async function createTrip(formData: FormData) {
     redirect(
       "/trips?error=Enter%20a%20valid%20route%2C%20cargo%20weight%20and%20schedule"
     );
-  const route = fallbackRoute(source, destination);
+  const route = await resolveRoute(source, destination);
   await db.$transaction(async (tx) => {
     const vehicle = await tx.vehicle.findUniqueOrThrow({
       where: { id: vehicleId },
@@ -447,26 +447,62 @@ async function storeUpload(
 
 export async function uploadDocument(formData: FormData) {
   const entityType = String(formData.get("entityType"));
-  const user = await requirePermission(entityType === "vehicle" ? "manage:vehicles" : "manage:drivers");
+  const user = await requirePermission(
+    entityType === "vehicle" ? "manage:vehicles" : "manage:drivers"
+  );
   const entityId = String(formData.get("entityId"));
   let failure = "";
   try {
     const file = await storeUpload(formData.get("file"), user.id);
     if (!file) throw new Error("Select a document to upload.");
-    const data = { fileId: file.id, type: String(formData.get("type") || "Other"), expiresAt: formData.get("expiresAt") ? new Date(String(formData.get("expiresAt"))) : null };
-    if (entityType === "vehicle") await db.vehicleDocument.create({ data: { ...data, vehicleId: entityId } });
-    else await db.driverDocument.create({ data: { ...data, driverId: entityId } });
-    await db.auditLog.create({ data: { actorId: user.id, action: "DOCUMENT_UPLOAD", entityType: entityType === "vehicle" ? "Vehicle" : "Driver", entityId, details: file.originalName } });
-  } catch (error) { failure = error instanceof Error ? error.message : "Upload failed"; }
+    const data = {
+      fileId: file.id,
+      type: String(formData.get("type") || "Other"),
+      expiresAt: formData.get("expiresAt")
+        ? new Date(String(formData.get("expiresAt")))
+        : null,
+    };
+    if (entityType === "vehicle")
+      await db.vehicleDocument.create({
+        data: { ...data, vehicleId: entityId },
+      });
+    else
+      await db.driverDocument.create({ data: { ...data, driverId: entityId } });
+    await db.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: "DOCUMENT_UPLOAD",
+        entityType: entityType === "vehicle" ? "Vehicle" : "Driver",
+        entityId,
+        details: file.originalName,
+      },
+    });
+  } catch (error) {
+    failure = error instanceof Error ? error.message : "Upload failed";
+  }
   revalidatePath(entityType === "vehicle" ? "/vehicles" : "/drivers");
-  redirect(`/${entityType === "vehicle" ? "vehicles" : "drivers"}?${failure ? `error=${encodeURIComponent(failure)}` : "message=Document%20uploaded"}`);
+  redirect(
+    `/${entityType === "vehicle" ? "vehicles" : "drivers"}?${failure ? `error=${encodeURIComponent(failure)}` : "message=Document%20uploaded"}`
+  );
 }
 
 export async function deleteDocument(formData: FormData) {
   const entityType = String(formData.get("entityType"));
-  const user = await requirePermission(entityType === "vehicle" ? "manage:vehicles" : "manage:drivers");
+  const user = await requirePermission(
+    entityType === "vehicle" ? "manage:vehicles" : "manage:drivers"
+  );
   const fileId = String(formData.get("fileId"));
-  await db.$transaction([db.storedFile.delete({ where: { id: fileId } }), db.auditLog.create({ data: { actorId: user.id, action: "DOCUMENT_DELETE", entityType: entityType === "vehicle" ? "Vehicle" : "Driver", details: fileId } })]);
+  await db.$transaction([
+    db.storedFile.delete({ where: { id: fileId } }),
+    db.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: "DOCUMENT_DELETE",
+        entityType: entityType === "vehicle" ? "Vehicle" : "Driver",
+        details: fileId,
+      },
+    }),
+  ]);
   revalidatePath(entityType === "vehicle" ? "/vehicles" : "/drivers");
 }
 
@@ -485,6 +521,10 @@ export async function scheduleMaintenance(formData: FormData) {
         estimatedCost: Number(formData.get("estimatedCost") || 0),
         priority: String(formData.get("priority") || "MEDIUM"),
       },
+    }),
+    db.vehicle.update({
+      where: { id: vehicleId },
+      data: { status: "IN_SHOP" },
     }),
     db.auditLog.create({
       data: {
@@ -629,7 +669,7 @@ export async function createFuelLog(formData: FormData) {
 }
 
 export async function submitExpense(formData: FormData) {
-  const user = await requirePermission("manage:finance");
+  const user = await requirePermission("read:finance");
   const amount = Number(formData.get("amount"));
   let failure = "";
   try {

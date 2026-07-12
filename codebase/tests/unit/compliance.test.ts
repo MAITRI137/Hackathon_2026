@@ -22,8 +22,18 @@ describe("compliance scan", () => {
       drivers: [
         { id: "d1", name: "Raj", status: "AVAILABLE", licenceExpiry: day(-30) },
         { id: "d2", name: "Neha", status: "AVAILABLE", licenceExpiry: day(15) },
-        { id: "d3", name: "Priya", status: "SUSPENDED", licenceExpiry: day(150) },
-        { id: "d4", name: "Alex", status: "AVAILABLE", licenceExpiry: day(365) },
+        {
+          id: "d3",
+          name: "Priya",
+          status: "SUSPENDED",
+          licenceExpiry: day(150),
+        },
+        {
+          id: "d4",
+          name: "Alex",
+          status: "AVAILABLE",
+          licenceExpiry: day(365),
+        },
       ],
       vehicles: [],
       maintenance: [],
@@ -32,7 +42,9 @@ describe("compliance scan", () => {
     });
     expect(alerts.find((a) => a.entityId === "d1")?.severity).toBe("CRITICAL");
     expect(alerts.find((a) => a.entityId === "d2")?.severity).toBe("WARNING");
-    expect(alerts.find((a) => a.entityId === "d3")?.message).toContain("suspended");
+    expect(alerts.find((a) => a.entityId === "d3")?.message).toContain(
+      "suspended"
+    );
     expect(alerts.filter((a) => a.entityId === "d4")).toHaveLength(0);
   });
 
@@ -41,7 +53,13 @@ describe("compliance scan", () => {
       drivers: [],
       vehicles: [
         { ...baseVehicle, pollutionExpiry: day(-5) },
-        { ...baseVehicle, id: "v2", name: "Bus-01", status: "RETIRED", insuranceExpiry: day(-99) },
+        {
+          ...baseVehicle,
+          id: "v2",
+          name: "Bus-01",
+          status: "RETIRED",
+          insuranceExpiry: day(-99),
+        },
       ],
       maintenance: [],
       trips: [],
@@ -55,27 +73,77 @@ describe("compliance scan", () => {
     const alerts = scanCompliance({
       drivers: [],
       vehicles: [],
-      maintenance: [{ id: "m1", vehicleName: "Van-03", status: "SCHEDULED", scheduledDate: day(-2) }],
+      maintenance: [
+        {
+          id: "m1",
+          vehicleName: "Van-03",
+          status: "SCHEDULED",
+          scheduledDate: day(-2),
+        },
+      ],
       trips: [
-        { id: "t1", tripNumber: "TRP-1", status: "DRAFT", estimatedMargin: -500, plannedDistance: 100, actualFuelConsumed: null },
-        { id: "t2", tripNumber: "TRP-2", status: "COMPLETED", estimatedMargin: 1000, plannedDistance: 100, actualFuelConsumed: 40 },
+        {
+          id: "t1",
+          tripNumber: "TRP-1",
+          status: "DRAFT",
+          estimatedMargin: -500,
+          plannedDistance: 100,
+          actualFuelConsumed: null,
+        },
+        {
+          id: "t2",
+          tripNumber: "TRP-2",
+          status: "COMPLETED",
+          estimatedMargin: 1000,
+          plannedDistance: 100,
+          actualFuelConsumed: 40,
+        },
       ],
       now,
     });
-    expect(alerts.find((a) => a.entityType === "Maintenance")?.message).toContain("overdue");
-    expect(alerts.find((a) => a.entityId === "t1")?.message).toContain("negative estimated margin");
-    expect(alerts.find((a) => a.entityId === "t2")?.message).toContain("low fuel efficiency");
+    expect(
+      alerts.find((a) => a.entityType === "Maintenance")?.message
+    ).toContain("overdue");
+    expect(alerts.find((a) => a.entityId === "t1")?.message).toContain(
+      "negative estimated margin"
+    );
+    expect(alerts.find((a) => a.entityId === "t2")?.message).toContain(
+      "low fuel efficiency"
+    );
   });
 
   it("returns nothing for a healthy fleet", () => {
     expect(
       scanCompliance({
-        drivers: [{ id: "d1", name: "Alex", status: "AVAILABLE", licenceExpiry: day(200) }],
+        drivers: [
+          {
+            id: "d1",
+            name: "Alex",
+            status: "AVAILABLE",
+            licenceExpiry: day(200),
+          },
+        ],
         vehicles: [baseVehicle],
-        maintenance: [{ id: "m1", vehicleName: "Van-05", status: "SCHEDULED", scheduledDate: day(5) }],
-        trips: [{ id: "t1", tripNumber: "TRP-1", status: "COMPLETED", estimatedMargin: 5000, plannedDistance: 145, actualFuelConsumed: 23 }],
+        maintenance: [
+          {
+            id: "m1",
+            vehicleName: "Van-05",
+            status: "SCHEDULED",
+            scheduledDate: day(5),
+          },
+        ],
+        trips: [
+          {
+            id: "t1",
+            tripNumber: "TRP-1",
+            status: "COMPLETED",
+            estimatedMargin: 5000,
+            plannedDistance: 145,
+            actualFuelConsumed: 23,
+          },
+        ],
         now,
-      }),
+      })
     ).toHaveLength(0);
   });
 });

@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { hasPermission, hasAnyPermission, hasRole } from "@/lib/auth/permissions";
+import {
+  hasPermission,
+  hasAnyPermission,
+  hasRole,
+} from "@/lib/auth/permissions";
 import { SessionUser } from "@/lib/auth/types";
 
 describe("Permissions", () => {
@@ -11,8 +15,8 @@ describe("Permissions", () => {
     status: "ACTIVE",
     permissions: [
       { action: "read", subject: "dashboard" },
-      { action: "manage", subject: "trips" }
-    ]
+      { action: "manage", subject: "trips" },
+    ],
   };
 
   it("should return true if user has specific permission", () => {
@@ -30,7 +34,9 @@ describe("Permissions", () => {
   });
 
   it("should return true if user has any of the requested permissions", () => {
-    expect(hasAnyPermission(mockUser, ["manage:dashboard", "manage:trips"])).toBe(true);
+    expect(
+      hasAnyPermission(mockUser, ["manage:dashboard", "manage:trips"])
+    ).toBe(true);
   });
 
   it("should return true if user has the requested role", () => {

@@ -1,23 +1,23 @@
-import { cookies } from 'next/headers';
-import crypto from 'crypto';
-import { db } from '../db';
-import { SessionUser, RoleSlug } from './types';
+import { cookies } from "next/headers";
+import crypto from "crypto";
+import { db } from "../db";
+import { SessionUser, RoleSlug } from "./types";
 
-const SESSION_COOKIE_NAME = 'transitops_session';
+const SESSION_COOKIE_NAME = "transitops_session";
 const SESSION_EXPIRY_DAYS = 7;
 
 /**
  * Generates a random session token.
  */
 function generateSessionToken(): string {
-  return crypto.randomBytes(32).toString('hex');
+  return crypto.randomBytes(32).toString("hex");
 }
 
 /**
  * Hashes a session token for secure database storage.
  */
 export function hashSessionToken(token: string): string {
-  return crypto.createHash('sha256').update(token).digest('hex');
+  return crypto.createHash("sha256").update(token).digest("hex");
 }
 
 /**
@@ -26,7 +26,9 @@ export function hashSessionToken(token: string): string {
 export async function createSession(userId: string): Promise<void> {
   const token = generateSessionToken();
   const tokenHash = hashSessionToken(token);
-  const expiresAt = new Date(Date.now() + SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+  const expiresAt = new Date(
+    Date.now() + SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1000
+  );
 
   await db.session.create({
     data: {
@@ -39,9 +41,9 @@ export async function createSession(userId: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
     expires: expiresAt,
   });
 }
@@ -82,7 +84,7 @@ export async function getCurrentSession(): Promise<SessionUser | null> {
 
   const user = session.user;
 
-  if (user.status !== 'ACTIVE') {
+  if (user.status !== "ACTIVE") {
     return null;
   }
 
@@ -91,7 +93,7 @@ export async function getCurrentSession(): Promise<SessionUser | null> {
     email: user.email,
     name: user.name,
     roleSlug: user.role.slug as RoleSlug,
-    status: user.status as 'ACTIVE' | 'DISABLED',
+    status: user.status as "ACTIVE" | "DISABLED",
     permissions: user.role.permissions.map((rp: any) => ({
       action: rp.permission.action,
       subject: rp.permission.subject,

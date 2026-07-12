@@ -15,7 +15,9 @@ describe("authentication security", () => {
     const token = "demo-session-token";
     const hash = hashSessionToken(token);
 
-    expect(hash).toBe("af51df92a4233cfa6a5866ca289201b515a0277c14e2aa25d0c703c7b52223d2");
+    expect(hash).toBe(
+      "af51df92a4233cfa6a5866ca289201b515a0277c14e2aa25d0c703c7b52223d2"
+    );
     expect(hash).not.toBe(token);
   });
 });

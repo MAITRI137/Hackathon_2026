@@ -6,33 +6,33 @@
 
 @layer base {
   :root {
-    --background: 42 33% 95%; /* #F8F6F1 */
-    --foreground: 60 10% 15%; /* #2C2C24 */
+    --background: 48 56% 98%; /* Rice Paper #FDFCF8 */
+    --foreground: 60 10% 16%; /* Deep Loam #2C2C24 */
 
-    --card: 42 100% 98%; /* #FFFDF8 */
-    --card-foreground: 60 10% 15%; /* #2C2C24 */
+    --card: 48 40% 99%;
+    --card-foreground: 60 10% 16%;
 
-    --popover: 42 100% 98%;
-    --popover-foreground: 60 10% 15%;
+    --popover: 48 40% 99%;
+    --popover-foreground: 60 10% 16%;
 
-    --primary: 81 16% 40%; /* #6B7755 */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 100 16% 38%; /* Moss Green #5D7052 */
+    --primary-foreground: 80 18% 95%;
 
-    --secondary: 37 40% 88%; /* #EDE4D5 */
-    --secondary-foreground: 60 10% 15%;
+    --secondary: 28 42% 56%; /* Terracotta #C18C5D */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 42 46% 97%; /* sidebar-bg #FBF9F4 */
-    --muted-foreground: 38 6% 50%; /* #8A8479 */
+    --muted: 33 24% 92%; /* Stone #F0EBE5 */
+    --muted-foreground: 60 5% 45%; /* Dried Grass #78786C */
 
-    --accent: 20 61% 56%; /* #D47B4D */
-    --accent-foreground: 0 0% 100%;
+    --accent: 36 33% 85%; /* Sand #E6DCCD */
+    --accent-foreground: 54 7% 27%;
 
-    --destructive: 3 55% 94%; /* #F9EBEA */
-    --destructive-foreground: 5 58% 43%; /* #B03A2E */
+    --destructive: 7 40% 47%; /* Burnt Sienna #A85448 */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 39 19% 87%; /* #E6E2DA */
-    --input: 39 19% 87%;
-    --ring: 81 16% 40%; /* Primary */
+    --border: 36 20% 84%; /* Raw Timber #DED8CF */
+    --input: 36 20% 84%;
+    --ring: 100 16% 38%;
 
     --radius: 1.375rem; /* 22px */
   }
@@ -72,6 +72,10 @@
   * {
     @apply border-border;
   }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings:
@@ -88,6 +92,20 @@
   h6 {
     font-family: var(--font-heading);
   }
+  ::selection {
+    background: hsl(var(--secondary) / 0.32);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @layer utilities {
@@ -97,4 +115,43 @@
   .shadow-moss {
     box-shadow: 0 4px 20px -2px rgba(93, 112, 82, 0.15);
   }
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.5);
+  border-radius: 8px;
+  border: 2px solid hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.8);
+}
+
+/* File Input Customization */
+input[type="file"]::file-selector-button {
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  padding: 0.25rem 0.75rem;
+  border-radius: calc(var(--radius) - 6px);
+  margin-right: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: hsl(var(--muted));
+  border-color: hsl(var(--primary) / 0.5);
 }

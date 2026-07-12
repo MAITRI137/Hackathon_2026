@@ -1,12 +1,12 @@
-export type RoleSlug = 
-  | 'admin'
-  | 'fleet_manager'
-  | 'dispatcher'
-  | 'safety_officer'
-  | 'financial_analyst'
-  | 'driver';
+export type RoleSlug =
+  | "admin"
+  | "fleet_manager"
+  | "dispatcher"
+  | "safety_officer"
+  | "financial_analyst"
+  | "driver";
 
-export type UserStatus = 'ACTIVE' | 'DISABLED';
+export type UserStatus = "ACTIVE" | "DISABLED";
 
 export interface Permission {
   action: string;

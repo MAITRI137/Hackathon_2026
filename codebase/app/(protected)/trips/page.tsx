@@ -2,8 +2,8 @@ import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/current-user";
 import { hasPermission } from "@/lib/auth/permissions";
 import { recommendDispatch } from "@/lib/dispatch";
-import { fallbackRoute, locations } from "@/lib/routes";
-import { RouteMap } from "@/components/route-map";
+import { locations, resolveRoute } from "@/lib/routes";
+import { RouteMap } from "@/components/ui/dynamic-map";
 import {
   buttonClass,
   cardClass,
@@ -43,7 +43,7 @@ export default async function TripsPage({
     destination = params?.destination || "Pune",
     cargo = Number(params?.cargo || 450),
     revenue = Number(params?.revenue || 36500);
-  const route = fallbackRoute(source, destination),
+  const route = await resolveRoute(source, destination),
     completion = new Date(Date.now() + 2 * 86_400_000);
   const recommendation = recommendDispatch(
     {
@@ -289,9 +289,25 @@ export default async function TripsPage({
         <section className={`${cardClass} xl:col-span-2`}>
           <div className="grid gap-4 md:grid-cols-[1fr_240px]">
             <div className="relative min-h-52 overflow-hidden rounded-[1.5rem] bg-[#e8eadf] dark:bg-[#182016]">
-              <RouteMap points={route.points} source={source} destination={destination}/>
-              <span className="absolute bottom-3 left-3 rounded-full bg-card/90 px-3 py-1 text-xs">
-                Demo route estimate · offline safe
+              <RouteMap
+                routes={[
+                  {
+                    source: route.points[0] as [number, number],
+                    destination: route.points[route.points.length - 1] as [
+                      number,
+                      number,
+                    ],
+                    waypoints: route.points.slice(1, -1) as [number, number][],
+                  },
+                ]}
+                center={route.points[0] as [number, number]}
+                zoom={7}
+                height="320px"
+              />
+              <span className="absolute bottom-3 left-3 z-[500] rounded-full bg-card/90 px-3 py-1 text-xs">
+                {route.isFallback
+                  ? "Demo route estimate · offline safe"
+                  : "Live OpenStreetMap route"}
               </span>
             </div>
             <div>
@@ -316,7 +332,9 @@ export default async function TripsPage({
                 <div>
                   <dt className="text-muted-foreground">Routing</dt>
                   <dd className="font-bold text-primary">
-                    Deterministic fallback
+                    {route.isFallback
+                      ? "Deterministic fallback"
+                      : "OSRM · OpenStreetMap"}
                   </dd>
                 </div>
               </dl>

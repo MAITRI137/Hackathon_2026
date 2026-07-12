@@ -10,7 +10,13 @@ import {
   StatCard,
   StatusBadge,
 } from "@/components/operations";
-import { createDriver, deleteDocument, setDriverStatus, uploadDocument } from "../actions";
+import { PersonAvatar } from "@/components/botanics";
+import {
+  createDriver,
+  deleteDocument,
+  setDriverStatus,
+  uploadDocument,
+} from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -40,7 +46,10 @@ export default async function DriversPage({
       }),
     },
     orderBy: { name: "asc" },
-    include: { documents: { include: { file: true } }, _count: { select: { trips: true } } },
+    include: {
+      documents: { include: { file: true } },
+      _count: { select: { trips: true } },
+    },
   });
   const canManage = hasPermission(user, "manage:drivers");
   return (
@@ -159,9 +168,14 @@ export default async function DriversPage({
               return (
                 <tr key={d.id} className="border-b last:border-0">
                   <td className="px-5 py-4">
-                    <strong>{d.name}</strong>
-                    <span className="block text-xs text-muted-foreground">
-                      {d.employeeId}
+                    <span className="flex items-center gap-3">
+                      <PersonAvatar name={d.name} />
+                      <span>
+                        <strong>{d.name}</strong>
+                        <span className="block text-xs text-muted-foreground">
+                          {d.employeeId}
+                        </span>
+                      </span>
                     </span>
                   </td>
                   <td className="px-5 py-4">
@@ -177,7 +191,39 @@ export default async function DriversPage({
                     {d.safetyScore}
                   </td>
                   <td className="px-5 py-4">{d.region}</td>
-                  <td className="px-5 py-4">{d._count.trips}{d.documents.map(document=><span key={document.id} className="mt-1 flex gap-1 text-xs"><a className="text-primary" href={`/files/${document.fileId}`}>{document.type}</a>{canManage&&<form action={deleteDocument}><input type="hidden" name="entityType" value="driver"/><input type="hidden" name="fileId" value={document.fileId}/><button aria-label={`Delete ${document.type}`}>×</button></form>}</span>)}</td>
+                  <td className="px-5 py-4">
+                    {d._count.trips}
+                    {d.documents.map((document) => (
+                      <span
+                        key={document.id}
+                        className="mt-1 flex gap-1 text-xs"
+                      >
+                        <a
+                          className="text-primary"
+                          href={`/files/${document.fileId}`}
+                        >
+                          {document.type}
+                        </a>
+                        {canManage && (
+                          <form action={deleteDocument}>
+                            <input
+                              type="hidden"
+                              name="entityType"
+                              value="driver"
+                            />
+                            <input
+                              type="hidden"
+                              name="fileId"
+                              value={document.fileId}
+                            />
+                            <button aria-label={`Delete ${document.type}`}>
+                              ×
+                            </button>
+                          </form>
+                        )}
+                      </span>
+                    ))}
+                  </td>
                   <td className="px-5 py-4">
                     <StatusBadge>{compliance}</StatusBadge>
                   </td>
@@ -186,7 +232,43 @@ export default async function DriversPage({
                   </td>
                   {canManage && (
                     <td className="px-5 py-4">
-                      <details className="mb-2"><summary className="cursor-pointer text-xs font-bold text-primary">Document</summary><form action={uploadDocument} className="mt-2 grid w-56 gap-2"><input type="hidden" name="entityType" value="driver"/><input type="hidden" name="entityId" value={d.id}/><input name="type" required placeholder="Driving licence" className="rounded-full border px-3 py-1 text-xs"/><input name="expiresAt" type="date" className="rounded-full border px-3 py-1 text-xs"/><input name="file" type="file" accept="application/pdf,image/png,image/jpeg" required className="text-xs"/><button className="text-left text-xs font-bold text-primary">Upload</button></form></details>
+                      <details className="mb-2">
+                        <summary className="cursor-pointer text-xs font-bold text-primary">
+                          Document
+                        </summary>
+                        <form
+                          action={uploadDocument}
+                          className="mt-2 grid w-56 gap-2"
+                        >
+                          <input
+                            type="hidden"
+                            name="entityType"
+                            value="driver"
+                          />
+                          <input type="hidden" name="entityId" value={d.id} />
+                          <input
+                            name="type"
+                            required
+                            placeholder="Driving licence"
+                            className="rounded-full border px-3 py-1 text-xs"
+                          />
+                          <input
+                            name="expiresAt"
+                            type="date"
+                            className="rounded-full border px-3 py-1 text-xs"
+                          />
+                          <input
+                            name="file"
+                            type="file"
+                            accept="application/pdf,image/png,image/jpeg"
+                            required
+                            className="text-xs"
+                          />
+                          <button className="text-left text-xs font-bold text-primary">
+                            Upload
+                          </button>
+                        </form>
+                      </details>
                       <form action={setDriverStatus}>
                         <input type="hidden" name="id" value={d.id} />
                         <input

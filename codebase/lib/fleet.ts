@@ -1,7 +1,12 @@
 import { z } from "zod";
 
 export const vehicleInput = z.object({
-  registrationNumber: z.string().trim().min(3).max(30).transform((value) => value.toUpperCase()),
+  registrationNumber: z
+    .string()
+    .trim()
+    .min(3)
+    .max(30)
+    .transform((value) => value.toUpperCase()),
   name: z.string().trim().min(2).max(80),
   type: z.string().trim().min(2).max(40),
   maxLoadCapacity: z.coerce.number().positive(),
@@ -12,7 +17,12 @@ export const vehicleInput = z.object({
 export const driverInput = z.object({
   name: z.string().trim().min(2).max(80),
   employeeId: z.string().trim().min(2).max(30),
-  licenceNumber: z.string().trim().min(3).max(40).transform((value) => value.toUpperCase()),
+  licenceNumber: z
+    .string()
+    .trim()
+    .min(3)
+    .max(40)
+    .transform((value) => value.toUpperCase()),
   licenceCategory: z.string().trim().min(1).max(30),
   licenceExpiry: z.coerce.date(),
   contactNumber: z.string().trim().min(7).max(20),
@@ -20,7 +30,10 @@ export const driverInput = z.object({
   status: z.enum(["AVAILABLE", "OFF_DUTY", "SUSPENDED"]),
 });
 
-export function driverCompliance(driver: { status: string; licenceExpiry: Date }, now = new Date()) {
+export function driverCompliance(
+  driver: { status: string; licenceExpiry: Date },
+  now = new Date()
+) {
   if (driver.status === "SUSPENDED") return "Suspended";
   const days = (driver.licenceExpiry.getTime() - now.getTime()) / 86_400_000;
   if (days < 0) return "Expired";
