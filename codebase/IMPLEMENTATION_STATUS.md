@@ -6,16 +6,15 @@
 | 1. Authentication and RBAC | Complete | password, session-token, permission and UI tests | `37fb0a1` |
 | 2. Fleet master data | Complete | fleet rules, Prisma generation, deterministic seed, typecheck | `3f10d2d` |
 | 3. Trip dispatcher | Complete | atomic transitions, recommendation engine, fallback route, typecheck/build | `2e3fe4c` |
-| 4. Maintenance and finance | Complete | workflow transitions, DB uploads, OCR review, fixture generation, typecheck | pending (this commit) |
-| 5. Dashboard, reports, compliance | Pending | - | - |
+| 4. Maintenance and finance | Complete | workflow transitions, DB uploads, OCR review, fixture generation, build | `7d94a5d`, `74c461d` |
+| 5. Dashboard, reports, compliance | Complete | analytics formulas, compliance scan, CSV/PDF, outbox, audit, build | pending (this commit) |
 | 6. UI fidelity and responsive polish | Pending | - | - |
 | 7. Hardening and submission | Pending | - | - |
 
 ## Known issues
 
 - Docker is not installed in the current validation environment; Docker Compose verification is deferred to a Docker-capable host.
-- Product modules are placeholders until their listed milestones land.
 
 ## Next milestone
 
-Implement the live dashboard, analytics, compliance scans, CSV/PDF exports, email outbox and audit views.
+Finish visual fidelity, responsive navigation, accessible focus states and dark-theme polish.

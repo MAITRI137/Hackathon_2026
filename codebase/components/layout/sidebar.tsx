@@ -30,7 +30,7 @@ export function Sidebar({ user }: SidebarProps) {
   const visibleNavItems = navItems.filter(item => hasPermission(user, item.permission));
 
   return (
-    <div className="flex h-full w-64 flex-col bg-card border-r border-border">
+    <div className="hidden h-full w-64 flex-col border-r border-border bg-card md:flex">
       <div className="p-6">
         <h2 className="text-2xl font-heading font-bold text-primary">TransitOps</h2>
       </div>

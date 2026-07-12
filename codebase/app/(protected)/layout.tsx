@@ -14,7 +14,7 @@ export default async function ProtectedLayout({
       <Sidebar user={user} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Topbar user={user} />
-        <main className="flex-1 overflow-y-auto bg-muted/30 p-8">
+        <main className="flex-1 overflow-y-auto bg-muted/30 p-4 sm:p-8">
           {children}
         </main>
       </div>

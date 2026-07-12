@@ -65,6 +65,20 @@ export async function loginAction(
       };
     }
 
+    await db.$transaction([
+      db.user.update({
+        where: { id: user.id },
+        data: { lastLoginAt: new Date() },
+      }),
+      db.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: "LOGIN",
+          entityType: "User",
+          entityId: user.id,
+        },
+      }),
+    ]);
     await createSession(user.id);
   } catch (error) {
     console.error("Login error:", error);
