@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Quicksand, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const quicksand = Quicksand({ 
   subsets: ["latin"],
@@ -24,12 +25,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${quicksand.variable} ${fraunces.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${quicksand.variable} ${fraunces.variable}`}>
       <body
         className={`min-h-screen bg-background font-sans antialiased`}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

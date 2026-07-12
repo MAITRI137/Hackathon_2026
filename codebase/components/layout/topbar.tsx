@@ -1,17 +1,8 @@
 "use client";
 
 import { SessionUser } from "@/lib/auth/types";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { User, LogOut } from "lucide-react";
-import Link from "next/link";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { LogOut, Search } from "lucide-react";
 
 interface TopbarProps {
   user: SessionUser;
@@ -19,35 +10,30 @@ interface TopbarProps {
 
 export function Topbar({ user }: TopbarProps) {
   return (
-    <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
-      <div className="flex-1" />
-      <div className="flex items-center space-x-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                {user.name.charAt(0)}
-              </div>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user.name}</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {user.email}
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <a href="/logout" className="cursor-pointer text-destructive focus:text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </a>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <header className="flex h-16 items-center gap-4 border-b border-border bg-card px-4 sm:px-6">
+      <label className="relative hidden max-w-md flex-1 sm:block">
+        <span className="sr-only">Search TransitOps</span>
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <input
+          className="h-10 w-full rounded-full border bg-background pl-10 pr-4 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          placeholder="Search operations..."
+        />
+      </label>
+      <div className="ml-auto flex items-center gap-3">
+        <ThemeToggle />
+        <div className="hidden text-right sm:block">
+          <p className="text-sm font-semibold">{user.name}</p>
+          <p className="text-xs capitalize text-muted-foreground">
+            {user.roleSlug.replaceAll("_", " ")}
+          </p>
+        </div>
+        <a
+          href="/logout"
+          aria-label="Log out"
+          className="grid h-10 w-10 place-items-center rounded-full border bg-card text-muted-foreground transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <LogOut className="h-4 w-4" />
+        </a>
       </div>
     </header>
   );

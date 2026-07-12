@@ -44,7 +44,7 @@ export function Sidebar({ user }: SidebarProps) {
                 variant={isActive ? "secondary" : "ghost"}
                 className={cn(
                   "justify-start",
-                  isActive ? "bg-secondary/10 text-secondary hover:bg-secondary/20" : "hover:bg-accent/50 text-foreground"
+                  isActive ? "bg-primary/10 text-primary hover:bg-primary/20 font-medium" : "hover:bg-accent/50 text-foreground"
                 )}
                 asChild
               >
