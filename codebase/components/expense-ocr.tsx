@@ -113,10 +113,19 @@ export function ExpenseOcr({
       <label className="grid gap-1 text-xs font-bold">
         Date
         <input
-          key={`date-${parsed?.date?.toISOString()}`}
+          key={`date-${parsed?.date}`}
           name="date"
           type="date"
-          defaultValue={parsed?.date?.toISOString().slice(0, 10) || new Date().toISOString().slice(0, 10)}
+          defaultValue={(() => {
+            if (parsed?.date) {
+              const match = parsed.date.match(/(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/);
+              if (match) {
+                const [, d, m, y] = match;
+                return `${y.length === 2 ? "20" + y : y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+              }
+            }
+            return new Date().toISOString().slice(0, 10);
+          })()}
           required
           className={fieldClass}
         />
